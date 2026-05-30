@@ -1,19 +1,22 @@
-User-agent: *
-Allow: /
+# TTLOVA
 
-User-agent: GPTBot
-Allow: /
+> Российский бренд женской одежды. Примерь любовь.
 
-User-agent: ChatGPT-User
-Allow: /
+TTLOVA — бренд женской одежды из Красноярска. 5 лет на Wildberries, более 40 000 проданных изделий. Продаём напрямую без комиссии маркетплейса — честная цена.
 
-User-agent: Google-Extended
-Allow: /
+## Товары
 
-User-agent: PerplexityBot
-Allow: /
+- Костюм в горошек (топ-халтер + широкие брюки) — 3 999 ₽
+- Белый жилет с пуговицами — 599 ₽
 
-User-agent: ClaudeBot
-Allow: /
+## Контакты
 
-Sitemap: https://ttlova.shop/sitemap.xml
+- Сайт: https://ttlova.shop
+- Телефон/WhatsApp/Telegram: +7 953 588 88 73
+- Instagram: @TTLOVA
+- Город: Красноярск
+
+## О бренде
+
+ИП Антипова Татьяна Анатольевна, Красноярск.
+Доставка по всей России: СДЭК, Почта России, самовывоз.
