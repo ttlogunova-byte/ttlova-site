@@ -833,11 +833,9 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
     }
 
   } catch(err) {
-    // Если ЮКасса не работает — всё равно показываем успех (заказ уже в Telegram)
-    btn.textContent = 'Отправить заказ';
+    btn.textContent = 'Оплатить заказ';
     btn.disabled = false;
-    form.style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
+    alert('Ошибка: ' + err.message + '\nЗаказ отправлен в Telegram, свяжемся с вами.');
   }
 }
 
