@@ -818,7 +818,8 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
       body: JSON.stringify({
         amount: amount,
         description: `${product}, размер ${size}, ${name}`,
-        orderId: orderId
+        orderId: orderId,
+        phone: phone
       })
     });
 
