@@ -708,6 +708,12 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
           <textarea name="comment" placeholder="Пожелания по заказу..."></textarea>
         </div>
 
+        <div class="form-group" style="flex-direction:row;align-items:flex-start;gap:10px">
+          <input type="checkbox" name="consent" id="consent" required style="margin-top:3px;width:16px;height:16px;cursor:pointer;flex-shrink:0">
+          <label for="consent" style="font-size:11px;color:var(--muted);letter-spacing:0;text-transform:none;cursor:pointer">
+            Я принимаю <a href="/oferta.html" target="_blank" style="color:var(--text)">условия оферты</a> и даю согласие на <a href="/privacy.html" target="_blank" style="color:var(--text)">обработку персональных данных</a>
+          </label>
+        </div>
         <button type="submit" class="form-submit">Оплатить заказ</button>
         <p class="form-note">После отправки мы свяжемся с вами в течение часа для подтверждения</p>
 
@@ -740,6 +746,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
   </div>
   <div class="footer-right">
     <span class="footer-copy">Примерь любовь · © 2026</span>
+    <div style="display:flex;gap:16px;margin-top:4px">
+      <a href="/oferta.html" style="font-size:10px;color:rgba(255,255,255,0.3);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Оферта</a>
+      <a href="/privacy.html" style="font-size:10px;color:rgba(255,255,255,0.3);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Конфиденциальность</a>
+    </div>
     <a class="footer-phone" href="tel:89535888873">8 953 588 88 73</a>
   </div>
 </footer>
