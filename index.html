@@ -644,16 +644,11 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 
         <div class="form-group">
           <label>Изделие</label>
-          <div class="radio-group">
-            <label class="radio-card">
-              <input type="radio" name="product" value="Костюм в горошек — 3 999 ₽" required>
-              <span class="radio-label">Костюм в горошек<span class="radio-price">3 999 ₽</span></span>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="product" value="Белый жилет — 599 ₽">
-              <span class="radio-label">Белый жилет<span class="radio-price">599 ₽</span></span>
-            </label>
-          </div>
+          <select name="product" required onchange="updateAmount(this.value)">
+            <option value="" disabled selected>Выберите изделие</option>
+            <option value="Костюм в горошек — 3 999 ₽">Костюм в горошек — 3 999 ₽</option>
+            <option value="Белый жилет — 599 ₽">Белый жилет — 599 ₽</option>
+          </select>
         </div>
 
         <div class="form-row">
