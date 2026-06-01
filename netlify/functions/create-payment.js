@@ -6,7 +6,7 @@ exports.handler = async (event) => {
   const { amount, description, orderId } = JSON.parse(event.body);
 
   const SHOP_ID = '1370311';
-  const SECRET_KEY = 'live_-pZTOmi5nDZEfrfZqUAo3w_xLtl4QG6BwNnnMgWVfT4';
+  const SECRET_KEY = live_3DCwe0jLkNQwd9nSE1lROksWba2wAIv4uPT2I4p8YkY';
 
   const paymentData = {
     amount: { value: amount, currency: 'RUB' },
