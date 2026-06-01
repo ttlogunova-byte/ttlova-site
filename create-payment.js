@@ -14,20 +14,21 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { amount, description, orderId } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { amount, description, orderId } = body;
 
     const SHOP_ID = '1370311';
     const SECRET_KEY = 'live_3DCwe0jLkNQwd9nSE1lROksWba2wAIv4uPT2I4p8YkY';
     const credentials = Buffer.from(`${SHOP_ID}:${SECRET_KEY}`).toString('base64');
 
     const paymentData = {
-      amount: { value: String(amount), currency: 'RUB' },
+      amount: { value: parseFloat(amount).toFixed(2), currency: 'RUB' },
       confirmation: {
         type: 'redirect',
         return_url: 'https://ttlova.shop/?payment=success'
       },
       capture: true,
-      description: description
+      description: description || 'Заказ TTLOVA'
     };
 
     const response = await fetch('https://api.yookassa.ru/v2/payments', {
@@ -35,14 +36,14 @@ exports.handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${credentials}`,
-        'Idempotence-Key': orderId
+        'Idempotence-Key': orderId || String(Date.now())
       },
       body: JSON.stringify(paymentData)
     });
 
     const payment = await response.json();
-    console.log('YooKassa response:', JSON.stringify(payment));
 
+    // Return full response for debugging
     if (payment.confirmation && payment.confirmation.confirmation_url) {
       return {
         statusCode: 200,
@@ -53,15 +54,19 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: payment.description || 'No payment URL', details: payment })
+        body: JSON.stringify({ 
+          error: payment.description || payment.message || 'Unknown error',
+          code: payment.code,
+          type: payment.type,
+          full: payment
+        })
       };
     }
   } catch (err) {
-    console.error('Error:', err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({ error: err.message, stack: err.stack })
     };
   }
 };
