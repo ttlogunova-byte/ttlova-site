@@ -823,10 +823,12 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
     });
 
     const result = await res.json();
+    console.log('Payment result:', JSON.stringify(result));
 
     if (result.url) {
       window.location.href = result.url;
     } else {
+      alert('Ответ сервера: ' + JSON.stringify(result));
       throw new Error('No payment URL');
     }
 
