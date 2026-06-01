@@ -31,7 +31,7 @@ exports.handler = async (event) => {
       description: description || 'Заказ TTLOVA'
     };
 
-    const response = await fetch('https://api.yookassa.ru/v2/payments', {
+    const response = await fetch('https://api.yookassa.ru/v3/payments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,6 +43,7 @@ exports.handler = async (event) => {
 
     const payment = await response.json();
 
+    // Return full response for debugging
     if (payment.confirmation && payment.confirmation.confirmation_url) {
       return {
         statusCode: 200,
@@ -65,7 +66,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({ error: err.message, stack: err.stack })
     };
   }
 };
