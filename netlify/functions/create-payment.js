@@ -15,20 +15,37 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body);
-    const { amount, description, orderId } = body;
+    const { amount, description, orderId, phone } = body;
 
     const SHOP_ID = '1370311';
     const SECRET_KEY = 'live_3DCwe0jLkNQwd9nSE1lROksWba2wAIv4uPT2I4p8YkY';
     const credentials = Buffer.from(`${SHOP_ID}:${SECRET_KEY}`).toString('base64');
 
+    const price = parseFloat(amount).toFixed(2);
+
     const paymentData = {
-      amount: { value: parseFloat(amount).toFixed(2), currency: 'RUB' },
+      amount: { value: price, currency: 'RUB' },
       confirmation: {
         type: 'redirect',
         return_url: 'https://ttlova.shop/?payment=success'
       },
       capture: true,
-      description: description || 'Заказ TTLOVA'
+      description: description || 'Заказ TTLOVA',
+      receipt: {
+        customer: {
+          phone: (phone || '79535888873').replace(/\D/g, '').replace(/^8/, '7')
+        },
+        items: [
+          {
+            description: description || 'Товар TTLOVA',
+            quantity: '1.00',
+            amount: { value: price, currency: 'RUB' },
+            vat_code: 1,
+            payment_mode: 'full_payment',
+            payment_subject: 'commodity'
+          }
+        ]
+      }
     };
 
     const response = await fetch('https://api.yookassa.ru/v3/payments', {
@@ -43,7 +60,6 @@ exports.handler = async (event) => {
 
     const payment = await response.json();
 
-    // Return full response for debugging
     if (payment.confirmation && payment.confirmation.confirmation_url) {
       return {
         statusCode: 200,
@@ -54,10 +70,9 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ 
-          error: payment.description || payment.message || 'Unknown error',
+        body: JSON.stringify({
+          error: payment.description || 'Unknown error',
           code: payment.code,
-          type: payment.type,
           full: payment
         })
       };
@@ -66,7 +81,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: err.message, stack: err.stack })
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
