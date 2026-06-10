@@ -77,10 +77,13 @@ section{padding:100px 48px}
 .product-badge{display:inline-block;background:var(--dark);color:#fff;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;padding:4px 10px;margin-bottom:12px}
 .product-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;margin-bottom:4px}
 .product-desc{font-size:11px;color:var(--muted);letter-spacing:0.05em;margin-bottom:16px}
-.product-footer{display:flex;align-items:center;justify-content:space-between}
-.product-price{font-size:18px;font-weight:500;letter-spacing:0.05em}
-.product-btn{background:none;border:1px solid var(--line2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.3s;font-family:'Jost',sans-serif}
+.product-footer{display:flex;flex-direction:column;gap:10px}
+.product-footer-top{display:flex;align-items:center;justify-content:space-between}
+.product-buttons{display:flex;gap:8px}
+.product-btn{background:none;border:1px solid var(--line2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.3s;font-family:'Jost',sans-serif;flex:1}
 .product-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.add-to-cart-btn{background:none;border:1px solid var(--line2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.3s;font-family:'Jost',sans-serif;color:var(--text);flex:1}
+.add-to-cart-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
 
 .about{background:var(--dark);color:#fff;padding:100px 48px}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
@@ -514,8 +517,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Топ-халтер + широкие брюки · чёрно-белый горошек</div>
         <div class="product-footer">
           <div class="product-price">2 999 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм в горошек — 2 999 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм в горошек — 2 999 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм в горошек — 2 999 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм в горошек — 2 999 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -528,8 +533,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Топ на завязках + длинная юбка-макси · нежный цветочный принт</div>
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 899 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 899 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 899 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 899 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -542,8 +549,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Рубашка оверсайз + брюки палаццо · лёгкая ткань · белый</div>
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 799 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 799 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 799 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 799 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -556,8 +565,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жилет на пуговицах + шорты · вертикальная полоска · лён</div>
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый в полоску — 799 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый в полоску — 799 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый в полоску — 799 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый в полоску — 799 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -570,8 +581,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жилет на пуговицах + шорты · вертикальная полоска · лён</div>
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Льняной костюм белый в полоску — 799 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый в полоску — 799 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Льняной костюм белый в полоску — 799 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый в полоску — 799 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -584,8 +597,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жилет на пуговицах + шорты · однотонный · лён</div>
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый с шортами — 799 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый с шортами — 799 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый с шортами — 799 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый с шортами — 799 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -598,8 +613,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жилет на пуговицах + шорты · однотонный · лён</div>
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Льняной костюм белый с шортами — 799 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый с шортами — 799 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Льняной костюм белый с шортами — 799 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый с шортами — 799 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -612,8 +629,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Элегантный крой · базовый гардероб</div>
         <div class="product-footer">
           <div class="product-price">499 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Белый жилет — 499 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Белый жилет — 499 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Белый жилет — 499 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Белый жилет — 499 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -626,8 +645,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Рубашка оверсайз + брюки палаццо · лёгкая ткань · голубой</div>
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм рубашка голубой — 699 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка голубой — 699 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм рубашка голубой — 699 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка голубой — 699 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -640,8 +661,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Свитшот на молнии + брюки палаццо · рубчик · серый · XS</div>
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм трикотажный серый — 699 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный серый — 699 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм трикотажный серый — 699 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный серый — 699 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -654,8 +677,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Рубашка оверсайз + брюки палаццо · лёгкая ткань · зелёный</div>
         <div class="product-footer">
           <div class="product-price">499 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм рубашка зелёный — 499 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка зелёный — 499 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм рубашка зелёный — 499 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка зелёный — 499 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -668,8 +693,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Свитшот на молнии + брюки палаццо · рубчик · бордо</div>
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм трикотажный бордо — 699 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный бордо — 699 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм трикотажный бордо — 699 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный бордо — 699 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -682,8 +709,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Открытые плечи · многоуровневые воланы · летний образ</div>
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Топ с воланами белый — 399 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами белый — 399 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Топ с воланами белый — 399 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами белый — 399 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -696,8 +725,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Открытые плечи · многоуровневые воланы · вечерний образ</div>
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Топ с воланами чёрный — 399 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами чёрный — 399 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Топ с воланами чёрный — 399 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами чёрный — 399 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -710,8 +741,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Открытые плечи · многоуровневые воланы · нежный образ</div>
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Топ с воланами розовый — 399 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами розовый — 399 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Топ с воланами розовый — 399 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами розовый — 399 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -724,8 +757,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Оверсайз · пояс · тёплое · белый / молочный</div>
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Пальто утеплённое белое — 899 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Пальто утеплённое белое — 899 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Пальто утеплённое белое — 899 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Пальто утеплённое белое — 899 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -738,8 +773,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жакет + юбка-мини · букле · коричневый с молочной окантовкой</div>
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм букле (жакет + юбка) — 899 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм букле (жакет + юбка) — 899 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм букле (жакет + юбка) — 899 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм букле (жакет + юбка) — 899 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
@@ -752,8 +789,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-desc">Жакет на пуговицах + юбка-макси · клетка · молочный</div>
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
-          <button class="product-btn" onclick="selectProduct('Костюм альпака (жакет + юбка-макси) — 899 ₽')">Заказать</button>
-          <button class="add-to-cart-btn" onclick="addToCart('Костюм альпака (жакет + юбка-макси) — 899 ₽')">В корзину</button>
+          <div class="product-buttons">
+            <button class="product-btn" onclick="selectProduct('Костюм альпака (жакет + юбка-макси) — 899 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм альпака (жакет + юбка-макси) — 899 ₽')">В корзину</button>
+          </div>
         </div>
       </div>
     </div>
