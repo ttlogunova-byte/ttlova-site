@@ -1031,13 +1031,11 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 
       <div class="form-success" id="formSuccess" style="display:none">
         <div class="success-icon">✓</div>
-        <h3>Заявка принята!</h3>
-        <p>Мы свяжемся с вами в ближайшее время для подтверждения заказа.</p>
-        <p style="margin-top:12px">Или напишите сразу:</p>
-        <div class="messengers" style="margin-top:16px">
-          <button class="messenger-btn" onclick="window.open('https://t.me/TTLOVASHOP')">WhatsApp</button>
-          
-        </div>
+        <h3>Заказ оплачен!</h3>
+        <p>Спасибо! Мы уже готовим ваш заказ.</p>
+        <p style="margin-top:12px;font-size:13px;color:var(--muted);line-height:1.8">Напишите нам в Telegram — согласуем удобное время и дату доставки или самовывоза.</p>
+        <a href="https://t.me/TTLOVASHOP" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
+        <p style="margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:0.05em">@TTLOVASHOP · работаем без выходных</p>
       </div>
     </div>
 
@@ -1232,8 +1230,6 @@ if (window.location.search.includes('payment=success')) {
     const success = document.getElementById('formSuccess');
     if(success) {
       success.style.display = 'block';
-      success.querySelector('h3').textContent = '✓ Оплата прошла!';
-      success.querySelector('p').textContent = 'Заказ оплачен и принят. Мы свяжемся с вами для подтверждения отправки.';
     }
   });
 }
