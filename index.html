@@ -536,8 +536,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <div class="product-buttons">
-            <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 2 199 ₽')">Заказать</button>
-            <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 2 199 ₽')">В корзину</button>
+            <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 1 899 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 1 899 ₽')">В корзину</button>
           </div>
         </div>
       </div>
@@ -552,8 +552,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <div class="product-buttons">
-            <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 2 199 ₽')">Заказать</button>
-            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 2 199 ₽')">В корзину</button>
+            <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 1 999 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 1 999 ₽')">В корзину</button>
           </div>
         </div>
       </div>
@@ -966,8 +966,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
           <select name="product" required onchange="updateAmount(this.value)">
             <option value="" disabled selected>Выберите изделие</option>
             <option value="Костюм в горошек — 2 999 ₽">Костюм в горошек — 2 999 ₽</option>
-            <option value="Костюм цветочный (топ + юбка-макси) — 2 199 ₽">Костюм цветочный (топ + юбка-макси) — 2 199 ₽</option>
-            <option value="Костюм рубашка белый — 2 199 ₽">Костюм рубашка белый — 2 199 ₽</option>
+            <option value="Костюм цветочный (топ + юбка-макси) — 1 899 ₽">Костюм цветочный (топ + юбка-макси) — 1 899 ₽</option>
+            <option value="Костюм рубашка белый — 1 999 ₽">Костюм рубашка белый — 1 999 ₽</option>
             <option value="Льняной костюм бежевый в полоску — 799 ₽">Льняной костюм бежевый в полоску — 799 ₽</option>
             <option value="Льняной костюм белый в полоску — 799 ₽">Льняной костюм белый в полоску — 799 ₽</option>
             <option value="Льняной костюм бежевый с шортами — 799 ₽">Льняной костюм бежевый с шортами — 799 ₽</option>
@@ -1078,8 +1078,8 @@ window.addEventListener('scroll',()=>{
 
 const productSizes = {
   'Костюм в горошек — 2 999 ₽': ['S (42-44)', 'L (46-48)'],
-  'Костюм цветочный (топ + юбка-макси) — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
-  'Костюм рубашка белый — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм цветочный (топ + юбка-макси) — 1 899 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка белый — 1 999 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм белый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
@@ -1150,7 +1150,8 @@ async function submitOrder(e) {
   // Определяем сумму
   const priceMap = {
     '2 999': '2999.00',
-    '2 199': '2199.00',
+    '1 999': '1999.00',
+    '1 899': '1899.00',
     '999': '999.00',
     '899': '899.00',
     '799': '799.00',
@@ -1191,6 +1192,25 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
     });
   } catch(err) {}
 
+  // Сохраняем заказ в Supabase
+  const SUPABASE_URL = 'https://dtmitatnaduyglhwyckj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0bWl0YXRuYWR1eWdsaHd5Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDEyMDcsImV4cCI6MjA5NjY3NzIwN30.FVYD5wKjUqbqgIIzWtS_SNUHbBaAFagEZoSjAd-KG0o';
+  let orderNumber = '#' + Date.now().toString().slice(-4);
+  try {
+    const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({ order_number: orderNumber, name, phone, product, size, delivery, address, amount })
+    });
+    const saved = await saveRes.json();
+    if (saved[0]?.id) orderNumber = '#' + String(saved[0].id).padStart(4, '0');
+  } catch(e) {}
+
   // Создаём платёж в ЮКасса
   try {
     const orderId = 'ttlova-' + Date.now();
@@ -1198,7 +1218,7 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
       amount: { value: amount, currency: 'RUB' },
       confirmation: {
         type: 'redirect',
-        return_url: `https://ttlova.shop/?payment=success&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&product=${encodeURIComponent(product)}&size=${encodeURIComponent(size)}&delivery=${encodeURIComponent(delivery)}&address=${encodeURIComponent(address)}&amount=${amount}`
+        return_url: `https://ttlova.shop/?payment=success&order=${encodeURIComponent(orderNumber)}`
       },
       capture: true,
       description: `${product}, размер ${size}, ${name}`,
@@ -1235,37 +1255,22 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
 
 // Показываем сообщение если вернулись после оплаты
 if (window.location.search.includes('payment=success')) {
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('order').scrollIntoView({behavior:'smooth'});
     const form = document.querySelector('.order-form');
     if(form) form.style.display = 'none';
     const success = document.getElementById('formSuccess');
-    if(success) {
-      success.style.display = 'block';
+    if(!success) return;
+    success.style.display = 'block';
 
-      // Читаем параметры из URL
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get('name') || '';
-      const phone = params.get('phone') || '';
-      const product = params.get('product') || '';
-      const size = params.get('size') || '';
-      const delivery = params.get('delivery') || '';
-      const address = params.get('address') || '';
-      const amount = params.get('amount') || '';
+    const params = new URLSearchParams(window.location.search);
+    const orderNumber = params.get('order') || '';
 
-      // Формируем данные для бота
-      const orderData = `name:${name}|phone:${phone}|product:${product}|size:${size}|delivery:${delivery}|address:${address}|amount:${amount}`;
-      const botParam = encodeURIComponent(orderData).substring(0, 64).replace(/%/g,'x');
-
-      // Обновляем ссылку на бота
-      const botLink = success.querySelector('a[href*="t.me"]');
-      if(botLink) {
-        botLink.href = `https://t.me/TTLOVAdelivery_bot?start=${botParam}`;
-      }
-
-      // Сохраняем данные в localStorage для бота
-      const fullData = {name, phone, product, size, delivery, address, amount};
-      localStorage.setItem('ttlova_order_' + botParam, JSON.stringify(fullData));
+    // Обновляем ссылку на бота с номером заказа
+    const botLink = success.querySelector('a[href*="t.me"]');
+    if(botLink && orderNumber) {
+      const botParam = orderNumber.replace('#','');
+      botLink.href = `https://t.me/TTLOVAdelivery_bot?start=${botParam}`;
     }
   });
 }
@@ -1326,8 +1331,8 @@ let selectedSize = null;
 // ── SIZES MAP ───────────────────────────────────────
 const productSizesMap = {
   'Костюм в горошек — 2 999 ₽': ['S (42-44)', 'L (46-48)'],
-  'Костюм цветочный (топ + юбка-макси) — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
-  'Костюм рубашка белый — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм цветочный (топ + юбка-макси) — 1 899 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка белый — 1 999 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм белый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
@@ -1504,6 +1509,33 @@ async function checkoutCart() {
     });
     const data = await res.json();
     if (data.ok) {
+      // Сохраняем заказ в Supabase
+      const SUPABASE_URL = 'https://dtmitatnaduyglhwyckj.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0bWl0YXRuYWR1eWdsaHd5Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDEyMDcsImV4cCI6MjA5NjY3NzIwN30.FVYD5wKjUqbqgIIzWtS_SNUHbBaAFagEZoSjAd-KG0o';
+      let cartOrderNumber = '#' + Date.now().toString().slice(-4);
+      try {
+        const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({
+            order_number: cartOrderNumber,
+            name, phone,
+            product: itemsShort,
+            size: 'корзина',
+            delivery: deliveryInfo,
+            address,
+            amount: total.toString()
+          })
+        });
+        const saved = await saveRes.json();
+        if (saved[0]?.id) cartOrderNumber = '#' + String(saved[0].id).padStart(4, '0');
+      } catch(e) {}
+
       // Создаём платёж в ЮКасса
       const orderId = 'ttlova-cart-' + Date.now();
       const payRes = await fetch('/.netlify/functions/create-payment', {
@@ -1514,7 +1546,7 @@ async function checkoutCart() {
           description: `Заказ TTLOVA: ${itemsShort}`,
           orderId: orderId,
           phone: phone,
-          return_url: `https://ttlova.shop/?payment=success&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&product=${encodeURIComponent(itemsShort)}&size=корзина&delivery=${encodeURIComponent(deliveryInfo)}&address=${encodeURIComponent(address)}&amount=${total}`
+          return_url: `https://ttlova.shop/?payment=success&order=${encodeURIComponent(cartOrderNumber)}`
         })
       });
       const payData = await payRes.json();
