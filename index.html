@@ -1254,7 +1254,24 @@ if (window.location.search.includes('payment=success')) {
       <span class="cart-total-label">Итого</span>
       <span class="cart-total-price" id="cartTotal">0 ₽</span>
     </div>
-    <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">Оформить заказ</button>
+    <div id="cartCheckoutForm">
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+        <input id="cartName" type="text" placeholder="Ваше имя" style="background:var(--bg2);border:1px solid var(--line2);padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+        <input id="cartPhone" type="tel" placeholder="+7 000 000 00 00" style="background:var(--bg2);border:1px solid var(--line2);padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+        <input id="cartAddress" type="text" placeholder="Адрес (или оставьте пустым для самовывоза)" style="background:var(--bg2);border:1px solid var(--line2);padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+        <div style="display:flex;gap:8px">
+          <label style="flex:1;cursor:pointer">
+            <input type="radio" name="cartDelivery" value="Самовывоз" style="display:none" id="cartDelPickup">
+            <div id="cartDelPickupLabel" onclick="selectCartDelivery('Самовывоз')" style="border:1px solid var(--line2);padding:10px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">Самовывоз</div>
+          </label>
+          <label style="flex:1;cursor:pointer">
+            <input type="radio" name="cartDelivery" value="Доставка по Красноярску" style="display:none" id="cartDelCity">
+            <div id="cartDelCityLabel" onclick="selectCartDelivery('Доставка по Красноярску')" style="border:1px solid var(--line2);padding:10px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">По Красноярску</div>
+          </label>
+        </div>
+      </div>
+      <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">Оформить заказ</button>
+    </div>
   </div>
 </div>
 
@@ -1391,38 +1408,79 @@ function updateCartUI() {
   document.getElementById('cartCheckoutBtn').disabled = count === 0;
 }
 
-// ── CHECKOUT FROM CART ──────────────────────────────
+let cartDelivery = '';
+
+function selectCartDelivery(val) {
+  cartDelivery = val;
+  const pickup = document.getElementById('cartDelPickupLabel');
+  const city = document.getElementById('cartDelCityLabel');
+  if (val === 'Самовывоз') {
+    pickup.style.background = 'var(--dark)';
+    pickup.style.color = '#fff';
+    pickup.style.borderColor = 'var(--dark)';
+    city.style.background = '';
+    city.style.color = '';
+    city.style.borderColor = 'var(--line2)';
+  } else {
+    city.style.background = 'var(--dark)';
+    city.style.color = '#fff';
+    city.style.borderColor = 'var(--dark)';
+    pickup.style.background = '';
+    pickup.style.color = '';
+    pickup.style.borderColor = 'var(--line2)';
+  }
+}
+
 async function checkoutCart() {
   if (cart.length === 0) return;
 
-  const name = prompt('Ваше имя:');
-  if (!name) return;
-  const phone = prompt('Номер телефона:');
-  if (!phone) return;
-  const delivery = confirm('Самовывоз? Нажмите ОК для самовывоза, Отмена для доставки по Красноярску.')
-    ? 'Самовывоз · ул. Семафорная 80, оф. 9'
-    : 'Доставка по Красноярску';
-  const address = delivery.includes('Самовывоз') ? 'г. Красноярск, ул. Семафорная д. 80, оф. 9' : prompt('Адрес доставки:') || '';
+  const name = document.getElementById('cartName').value.trim();
+  const phone = document.getElementById('cartPhone').value.trim();
+  const address = document.getElementById('cartAddress').value.trim();
+
+  if (!name) { alert('Пожалуйста, введите имя'); document.getElementById('cartName').focus(); return; }
+  if (!phone) { alert('Пожалуйста, введите телефон'); document.getElementById('cartPhone').focus(); return; }
+  if (!cartDelivery) { alert('Пожалуйста, выберите способ доставки'); return; }
+
+  const btn = document.getElementById('cartCheckoutBtn');
+  btn.textContent = 'Отправляем...';
+  btn.disabled = true;
 
   const total = cart.reduce((sum, i) => sum + i.price, 0);
   const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
+  const deliveryInfo = cartDelivery === 'Самовывоз'
+    ? 'Самовывоз · г. Красноярск, ул. Семафорная д. 80, оф. 9'
+    : `Доставка по Красноярску · ${address || 'адрес не указан'}`;
 
   const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
   const CHAT_ID = '6716786160';
-  const text = `🛍 Новый заказ TTLOVA (корзина)!\n\n📦 Товары:\n${itemsList}\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🚚 Доставка: ${delivery}\n📍 Адрес: ${address}\n💰 Итого: ${total.toLocaleString('ru-RU')} ₽\n📌 Адрес самовывоза: г. Красноярск, ул. Семафорная д. 80, оф. 9`;
+  const text = `🛍 Новый заказ TTLOVA (корзина)!\n\n📦 Товары:\n${itemsList}\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🚚 Доставка: ${deliveryInfo}\n💰 Итого: ${total.toLocaleString('ru-RU')} ₽\n📌 Адрес самовывоза: г. Красноярск, ул. Семафорная д. 80, оф. 9`;
 
   try {
-    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({chat_id: CHAT_ID, text})
     });
-    cart = [];
-    updateCartUI();
-    closeCart();
-    alert('✓ Заказ отправлен! Мы свяжемся с вами в ближайшее время.');
+    const data = await res.json();
+    if (data.ok) {
+      cart = [];
+      cartDelivery = '';
+      document.getElementById('cartName').value = '';
+      document.getElementById('cartPhone').value = '';
+      document.getElementById('cartAddress').value = '';
+      selectCartDelivery('');
+      updateCartUI();
+      closeCart();
+      alert('✓ Заказ отправлен! Мы свяжемся с вами в ближайшее время.');
+    } else {
+      throw new Error('Telegram error');
+    }
   } catch(e) {
     alert('Ошибка отправки. Пожалуйста, напишите нам в WhatsApp: +7 953 588 88 73');
+  } finally {
+    btn.textContent = 'Оформить заказ';
+    btn.disabled = cart.length === 0;
   }
 }
 </script>
