@@ -900,18 +900,18 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
     <a class="help-card reveal" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'});return false;" href="#">
       <span class="help-num">01</span>
       <div class="help-title">Как сделать заказ</div>
-      <p class="help-desc">Заполните форму ниже или напишите нам в WhatsApp / Telegram. Поможем с выбором размера и ответим на все вопросы.</p>
+      <p class="help-desc">Заполните форму ниже или напишите нам в Telegram. Поможем с выбором размера и ответим на все вопросы.</p>
       <span class="help-arrow">→</span>
     </a>
 
-    <a class="help-card reveal" style="transition-delay:0.1s" onclick="window.open('https://wa.me/79535888873?text=Хочу%20узнать%20о%20размерах');return false;" href="#">
+    <a class="help-card reveal" style="transition-delay:0.1s" onclick="window.open('https://t.me/TTLOVASHOP');return false;" href="#">
       <span class="help-num">02</span>
       <div class="help-title">Таблица размеров</div>
       <p class="help-desc">Напишите нам — пришлём подробную таблицу размеров и поможем подобрать идеальный вариант под ваши параметры.</p>
       <span class="help-arrow">→</span>
     </a>
 
-    <a class="help-card reveal" style="transition-delay:0.2s" onclick="window.open('https://wa.me/79535888873?text=Хочу%20узнать%20об%20обмене%20и%20возврате');return false;" href="#">
+    <a class="help-card reveal" style="transition-delay:0.2s" onclick="window.open('https://t.me/TTLOVASHOP');return false;" href="#">
       <span class="help-num">03</span>
       <div class="help-title">Обмен и возврат</div>
       <p class="help-desc">Принимаем обмен и возврат в течение 14 дней при сохранении товарного вида. Все вопросы решаем лично — пишите нам.</p>
@@ -925,14 +925,14 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
       <span class="help-arrow">→</span>
     </a>
 
-    <a class="help-card reveal" style="transition-delay:0.1s" onclick="window.open('https://wa.me/79535888873');return false;" href="#">
+    <a class="help-card reveal" style="transition-delay:0.1s" onclick="window.open('https://t.me/TTLOVASHOP');return false;" href="#">
       <span class="help-num">05</span>
       <div class="help-title">Написать нам</div>
-      <p class="help-desc">Есть вопрос? Пишите в WhatsApp или Telegram — ответим быстро. Работаем без выходных.</p>
+      <p class="help-desc">Есть вопрос? Пишите в Telegram — ответим быстро. Работаем без выходных.</p>
       <span class="help-arrow">→</span>
     </a>
 
-    <a class="help-card reveal" style="transition-delay:0.2s" onclick="window.open('https://wa.me/79535888873?text=Расскажите%20о%20составе%20ткани');return false;" href="#">
+    <a class="help-card reveal" style="transition-delay:0.2s" onclick="window.open('https://t.me/TTLOVASHOP');return false;" href="#">
       <span class="help-num">06</span>
       <div class="help-title">Уход за изделием</div>
       <p class="help-desc">Все изделия изготовлены из качественных материалов. Пришлём инструкцию по уходу для конкретной вещи по запросу.</p>
@@ -1035,8 +1035,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <p>Мы свяжемся с вами в ближайшее время для подтверждения заказа.</p>
         <p style="margin-top:12px">Или напишите сразу:</p>
         <div class="messengers" style="margin-top:16px">
-          <button class="messenger-btn" onclick="window.open('https://wa.me/79535888873')">WhatsApp</button>
-          <button class="messenger-btn" onclick="window.open('https://t.me/+79535888873')">Telegram</button>
+          <button class="messenger-btn" onclick="window.open('https://t.me/TTLOVASHOP')">WhatsApp</button>
+          
         </div>
       </div>
     </div>
@@ -1049,7 +1049,6 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
     <span class="footer-logo">TTLOVA</span>
     <div class="footer-ip">ИП Антипова Татьяна Анатольевна</div>
     <div class="footer-ip">ИНН: 241901630890 · ОГРНИП: 318246800039253</div>
-    <div class="footer-ip">г. Красноярск, ул. Лесников 25А</div>
   </div>
   <div class="footer-center">
     <a class="footer-insta" href="https://instagram.com/TTLOVA" target="_blank">@TTLOVA</a>
@@ -1060,7 +1059,6 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
       <a href="/oferta.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Оферта</a>
       <a href="/privacy.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Конфиденциальность</a>
     </div>
-    <a class="footer-phone" href="tel:89535888873">8 953 588 88 73</a>
   </div>
 </footer>
 
@@ -1494,7 +1492,7 @@ async function checkoutCart() {
       throw new Error('Telegram error');
     }
   } catch(e) {
-    alert('Ошибка отправки. Пожалуйста, напишите нам в WhatsApp: +7 953 588 88 73');
+    alert('Ошибка отправки. Пожалуйста, напишите нам в Telegram: @TTLOVASHOP');
   } finally {
     btn.textContent = 'Оформить заказ';
     btn.disabled = cart.length === 0;
