@@ -156,6 +156,49 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 .footer-phone{color:rgba(255,255,255,0.5);text-decoration:none;font-size:11px;letter-spacing:0.1em;transition:color 0.3s}
 .footer-phone:hover{color:#fff}
 
+/* CART */
+.cart-btn{background:none;border:none;cursor:pointer;position:relative;padding:4px;display:flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);transition:color 0.3s}
+.cart-btn:hover{color:var(--gold)}
+.cart-icon{font-size:20px}
+.cart-count{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:500;display:none}
+.cart-count.visible{display:flex}
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--bg);z-index:201;transform:translateX(100%);transition:transform 0.4s ease;display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-header{padding:28px 28px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.cart-header-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300}
+.cart-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--muted);transition:color 0.3s;line-height:1}
+.cart-close:hover{color:var(--text)}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;letter-spacing:0.05em}
+.cart-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:13px;font-weight:500;margin-bottom:4px;letter-spacing:0.03em}
+.cart-item-size{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+.cart-item-price{font-size:14px;font-weight:500;color:var(--gold)}
+.cart-item-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0;transition:color 0.3s;align-self:flex-start}
+.cart-item-remove:hover{color:var(--text)}
+.cart-footer{padding:20px 28px 32px;border-top:1px solid var(--line)}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cart-total-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.cart-total-price{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300}
+.cart-checkout-btn{width:100%;background:var(--dark);color:#fff;border:none;padding:18px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
+.cart-checkout-btn:hover{background:#333}
+.add-to-cart-btn{background:none;border:1px solid var(--line2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all 0.3s;font-family:'Jost',sans-serif;color:var(--text);margin-top:6px;width:100%}
+.add-to-cart-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.size-popup{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.3s}
+.size-popup.open{opacity:1;pointer-events:all}
+.size-popup-inner{background:var(--bg);padding:36px;width:360px;max-width:90vw;position:relative}
+.size-popup-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:6px}
+.size-popup-product{font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:24px}
+.size-popup-sizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.size-pill{background:var(--bg2);border:1px solid var(--line2);padding:10px 18px;font-size:12px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;font-family:'Jost',sans-serif}
+.size-pill:hover,.size-pill.selected{background:var(--dark);color:#fff;border-color:var(--dark)}
+.size-popup-confirm{width:100%;background:var(--dark);color:#fff;border:none;padding:16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
+.size-popup-confirm:hover{background:#333}
+.size-popup-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)}
+
 /* REVIEWS */
 .reviews{background:var(--bg);padding:100px 48px}
 .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -417,6 +460,10 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
       <li><a href="#" onclick="document.querySelector('.about').scrollIntoView({behavior:'smooth'});return false">О бренде</a></li>
       <li><a href="#" onclick="document.querySelector('.delivery').scrollIntoView({behavior:'smooth'});return false">Доставка</a></li>
     </ul>
+    <button class="cart-btn" onclick="openCart()">
+      <span class="cart-icon">🛍</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
     <a class="nav-cta" href="#" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'});return false">Заказать</a>
   </div>
 </nav>
@@ -468,6 +515,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">2 999 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм в горошек — 2 999 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм в горошек — 2 999 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -481,6 +529,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 899 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 899 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -494,6 +543,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 799 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 799 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -507,6 +557,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый в полоску — 799 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый в полоску — 799 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -520,6 +571,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <button class="product-btn" onclick="selectProduct('Льняной костюм белый в полоску — 799 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый в полоску — 799 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -533,6 +585,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <button class="product-btn" onclick="selectProduct('Льняной костюм бежевый с шортами — 799 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм бежевый с шортами — 799 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -546,6 +599,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <button class="product-btn" onclick="selectProduct('Льняной костюм белый с шортами — 799 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Льняной костюм белый с шортами — 799 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -559,6 +613,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">499 ₽</div>
           <button class="product-btn" onclick="selectProduct('Белый жилет — 499 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Белый жилет — 499 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -572,6 +627,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм рубашка голубой — 699 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка голубой — 699 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -585,6 +641,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм трикотажный серый — 699 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный серый — 699 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -598,6 +655,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">499 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм рубашка зелёный — 499 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка зелёный — 499 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -611,6 +669,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">699 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм трикотажный бордо — 699 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм трикотажный бордо — 699 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -624,6 +683,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
           <button class="product-btn" onclick="selectProduct('Топ с воланами белый — 399 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами белый — 399 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -637,6 +697,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
           <button class="product-btn" onclick="selectProduct('Топ с воланами чёрный — 399 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами чёрный — 399 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -650,6 +711,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">399 ₽</div>
           <button class="product-btn" onclick="selectProduct('Топ с воланами розовый — 399 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Топ с воланами розовый — 399 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -663,6 +725,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <button class="product-btn" onclick="selectProduct('Пальто утеплённое белое — 899 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Пальто утеплённое белое — 899 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -676,6 +739,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм букле (жакет + юбка) — 899 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм букле (жакет + юбка) — 899 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -689,6 +753,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <button class="product-btn" onclick="selectProduct('Костюм альпака (жакет + юбка-макси) — 899 ₽')">Заказать</button>
+          <button class="add-to-cart-btn" onclick="addToCart('Костюм альпака (жакет + юбка-макси) — 899 ₽')">В корзину</button>
         </div>
       </div>
     </div>
@@ -1135,6 +1200,193 @@ if (window.location.search.includes('payment=success')) {
       success.querySelector('p').textContent = 'Заказ оплачен и принят. Мы свяжемся с вами для подтверждения отправки.';
     }
   });
+}
+</script>
+<!-- CART OVERLAY & DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-header-title">Корзина</div>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Корзина пуста</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">Итого</span>
+      <span class="cart-total-price" id="cartTotal">0 ₽</span>
+    </div>
+    <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">Оформить заказ</button>
+  </div>
+</div>
+
+<!-- SIZE POPUP -->
+<div class="size-popup" id="sizePopup">
+  <div class="size-popup-inner">
+    <button class="size-popup-close" onclick="closeSizePopup()">×</button>
+    <div class="size-popup-title">Выберите размер</div>
+    <div class="size-popup-product" id="sizePopupProduct"></div>
+    <div class="size-popup-sizes" id="sizePopupSizes"></div>
+    <button class="size-popup-confirm" onclick="confirmAddToCart()">Добавить в корзину</button>
+  </div>
+</div>
+
+<script>
+// ── CART STATE ──────────────────────────────────────
+let cart = [];
+let pendingProduct = null;
+let selectedSize = null;
+
+// ── SIZES MAP ───────────────────────────────────────
+const productSizesMap = {
+  'Костюм в горошек — 2 999 ₽': ['S (42-44)', 'L (46-48)'],
+  'Костюм цветочный (топ + юбка-макси) — 899 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка белый — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Льняной костюм бежевый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Льняной костюм белый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Льняной костюм бежевый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Льняной костюм белый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Белый жилет — 499 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка голубой — 699 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм трикотажный серый — 699 ₽': ['XS (40-42)'],
+  'Костюм рубашка зелёный — 499 ₽': ['XS (40-42)'],
+  'Костюм трикотажный бордо — 699 ₽': ['XS (40-42)'],
+  'Топ с воланами белый — 399 ₽': ['S (44)', 'M (46)', 'L (48)'],
+  'Топ с воланами чёрный — 399 ₽': ['S (44)', 'M (46)', 'L (48)'],
+  'Топ с воланами розовый — 399 ₽': ['S (44)', 'M (46)', 'L (48)'],
+  'Пальто утеплённое белое — 899 ₽': ['L (48)', 'XL (50)'],
+  'Костюм букле (жакет + юбка) — 899 ₽': ['M (46)', 'L (48)', 'XL (50)'],
+  'Костюм альпака (жакет + юбка-макси) — 899 ₽': ['S (44)', 'M (46)', 'L (48)'],
+};
+
+function getPrice(productValue) {
+  const match = productValue.match(/(\d[\d\s]+)₽/);
+  return match ? parseInt(match[1].replace(/\s/g, '')) : 0;
+}
+
+// ── CART OPEN/CLOSE ─────────────────────────────────
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+// ── ADD TO CART ─────────────────────────────────────
+function addToCart(productValue) {
+  const sizes = productSizesMap[productValue] || [];
+  if (sizes.length === 1) {
+    // Only one size — add directly
+    pushToCart(productValue, sizes[0]);
+    openCart();
+  } else {
+    // Show size picker
+    pendingProduct = productValue;
+    selectedSize = null;
+    document.getElementById('sizePopupProduct').textContent = productValue.replace(/ — \d.*/, '');
+    const sizesEl = document.getElementById('sizePopupSizes');
+    sizesEl.innerHTML = '';
+    sizes.forEach(s => {
+      const pill = document.createElement('button');
+      pill.className = 'size-pill';
+      pill.textContent = s;
+      pill.onclick = () => {
+        document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
+        pill.classList.add('selected');
+        selectedSize = s;
+      };
+      sizesEl.appendChild(pill);
+    });
+    document.getElementById('sizePopup').classList.add('open');
+  }
+}
+
+function closeSizePopup() {
+  document.getElementById('sizePopup').classList.remove('open');
+  pendingProduct = null;
+  selectedSize = null;
+}
+
+function confirmAddToCart() {
+  if (!selectedSize) { alert('Пожалуйста, выберите размер'); return; }
+  pushToCart(pendingProduct, selectedSize);
+  closeSizePopup();
+  openCart();
+}
+
+function pushToCart(productValue, size) {
+  cart.push({ product: productValue, size, price: getPrice(productValue), id: Date.now() });
+  updateCartUI();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = cart.length;
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = count;
+  countEl.classList.toggle('visible', count > 0);
+
+  const itemsEl = document.getElementById('cartItems');
+  if (count === 0) {
+    itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста</div>';
+  } else {
+    itemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.product.replace(/ — \d.*/, '')}</div>
+          <div class="cart-item-size">Размер: ${item.size}</div>
+          <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById('cartTotal').textContent = total.toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('cartCheckoutBtn').disabled = count === 0;
+}
+
+// ── CHECKOUT FROM CART ──────────────────────────────
+async function checkoutCart() {
+  if (cart.length === 0) return;
+
+  const name = prompt('Ваше имя:');
+  if (!name) return;
+  const phone = prompt('Номер телефона:');
+  if (!phone) return;
+  const delivery = confirm('Самовывоз? Нажмите ОК для самовывоза, Отмена для доставки по Красноярску.')
+    ? 'Самовывоз · ул. Семафорная 80, оф. 9'
+    : 'Доставка по Красноярску';
+  const address = delivery.includes('Самовывоз') ? 'г. Красноярск, ул. Семафорная д. 80, оф. 9' : prompt('Адрес доставки:') || '';
+
+  const total = cart.reduce((sum, i) => sum + i.price, 0);
+  const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
+
+  const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
+  const CHAT_ID = '6716786160';
+  const text = `🛍 Новый заказ TTLOVA (корзина)!\n\n📦 Товары:\n${itemsList}\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🚚 Доставка: ${delivery}\n📍 Адрес: ${address}\n💰 Итого: ${total.toLocaleString('ru-RU')} ₽\n📌 Адрес самовывоза: г. Красноярск, ул. Семафорная д. 80, оф. 9`;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: CHAT_ID, text})
+    });
+    cart = [];
+    updateCartUI();
+    closeCart();
+    alert('✓ Заказ отправлен! Мы свяжемся с вами в ближайшее время.');
+  } catch(e) {
+    alert('Ошибка отправки. Пожалуйста, напишите нам в WhatsApp: +7 953 588 88 73');
+  }
 }
 </script>
 </body>
