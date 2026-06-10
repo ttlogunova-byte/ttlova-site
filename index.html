@@ -1045,7 +1045,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <h3>Заказ оплачен!</h3>
         <p>Спасибо! Мы уже готовим ваш заказ.</p>
         <p style="margin-top:12px;font-size:13px;color:var(--muted);line-height:1.8">Напишите нам в Telegram — согласуем удобное время и дату доставки или самовывоза.</p>
-        <a href="https://t.me/TTLOVASHOP" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
+        <a href="https://t.me/TTLOVAdelivery_bot" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
         <p style="margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:0.05em">@TTLOVASHOP · работаем без выходных</p>
       </div>
     </div>
@@ -1166,10 +1166,16 @@ async function submitOrder(e) {
     if (product.includes(key)) { amount = val; break; }
   }
 
-  const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
+  // Проверка минимальной суммы для доставки
+  if (delivery === 'Доставка по Красноярску' && parseFloat(amount) < 5000) {
+    alert(`Бесплатная доставка по Красноярску от 5 000 ₽. Ваша сумма: ${parseFloat(amount).toLocaleString('ru-RU')} ₽.\nДобавьте товары в корзину или выберите самовывоз.`);
+    btn.textContent = 'Оплатить заказ';
+    btn.disabled = false;
+    return;
+  }
   const CHAT_ID = '6716786160';
 
-  // Сначала отправляем в Telegram
+  const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
   const text = `🛍 Новый заказ TTLOVA!
 
 📦 Изделие: ${product}
