@@ -159,6 +159,9 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 .footer-phone{color:rgba(255,255,255,0.5);text-decoration:none;font-size:13px;letter-spacing:0.1em;transition:color 0.3s}
 .footer-phone:hover{color:#fff}
 
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.liquidation-ticker{animation:ticker 20s linear infinite}
+
 /* CART */
 .cart-btn{background:none;border:1px solid var(--line2);cursor:pointer;position:relative;padding:10px 18px;display:flex;align-items:center;gap:8px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text);transition:all 0.3s}
 .cart-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
@@ -476,7 +479,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
     <div class="hero-left-overlay"></div>
   </div>
   <div class="hero-right">
-    <p class="hero-eyebrow">Новая коллекция · 2026</p>
+    <p class="hero-eyebrow" style="display:none">Новая коллекция · 2026</p>
     <h1 class="hero-title">Примерь<br><em>любовь.</em></h1>
     <p class="hero-subtitle">Одежда, в которой хочется жить</p>
     <p class="hero-sub">TTLOVA — российский бренд женской одежды. Каждая вещь создана, чтобы ты чувствовала себя собой — уверенной, лёгкой, живой.</p>
@@ -533,8 +536,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">899 ₽</div>
           <div class="product-buttons">
-            <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 899 ₽')">Заказать</button>
-            <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 899 ₽')">В корзину</button>
+            <button class="product-btn" onclick="selectProduct('Костюм цветочный (топ + юбка-макси) — 2 199 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм цветочный (топ + юбка-макси) — 2 199 ₽')">В корзину</button>
           </div>
         </div>
       </div>
@@ -549,10 +552,18 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
         <div class="product-footer">
           <div class="product-price">799 ₽</div>
           <div class="product-buttons">
-            <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 799 ₽')">Заказать</button>
-            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 799 ₽')">В корзину</button>
+            <button class="product-btn" onclick="selectProduct('Костюм рубашка белый — 2 199 ₽')">Заказать</button>
+            <button class="add-to-cart-btn" onclick="addToCart('Костюм рубашка белый — 2 199 ₽')">В корзину</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- БЕГУЩАЯ ЛЕНТА ЛИКВИДАЦИЯ -->
+    <div style="grid-column:1/-1;overflow:hidden;background:#c0392b;margin:20px 0">
+      <div class="liquidation-ticker" style="display:flex;white-space:nowrap">
+        <span style="display:inline-block;padding:16px 0;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:#fff">⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp;</span>
+        <span style="display:inline-block;padding:16px 0;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:#fff" aria-hidden="true">⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp; ⚡ ЛИКВИДАЦИЯ ОСТАТКОВ &nbsp;&nbsp;&nbsp;</span>
       </div>
     </div>
 
@@ -955,8 +966,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
           <select name="product" required onchange="updateAmount(this.value)">
             <option value="" disabled selected>Выберите изделие</option>
             <option value="Костюм в горошек — 2 999 ₽">Костюм в горошек — 2 999 ₽</option>
-            <option value="Костюм цветочный (топ + юбка-макси) — 899 ₽">Костюм цветочный (топ + юбка-макси) — 899 ₽</option>
-            <option value="Костюм рубашка белый — 799 ₽">Костюм рубашка белый — 799 ₽</option>
+            <option value="Костюм цветочный (топ + юбка-макси) — 2 199 ₽">Костюм цветочный (топ + юбка-макси) — 2 199 ₽</option>
+            <option value="Костюм рубашка белый — 2 199 ₽">Костюм рубашка белый — 2 199 ₽</option>
             <option value="Льняной костюм бежевый в полоску — 799 ₽">Льняной костюм бежевый в полоску — 799 ₽</option>
             <option value="Льняной костюм белый в полоску — 799 ₽">Льняной костюм белый в полоску — 799 ₽</option>
             <option value="Льняной костюм бежевый с шортами — 799 ₽">Льняной костюм бежевый с шортами — 799 ₽</option>
@@ -1067,8 +1078,8 @@ window.addEventListener('scroll',()=>{
 
 const productSizes = {
   'Костюм в горошек — 2 999 ₽': ['S (42-44)', 'L (46-48)'],
-  'Костюм цветочный (топ + юбка-макси) — 899 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
-  'Костюм рубашка белый — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм цветочный (топ + юбка-макси) — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка белый — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм белый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
@@ -1139,6 +1150,7 @@ async function submitOrder(e) {
   // Определяем сумму
   const priceMap = {
     '2 999': '2999.00',
+    '2 199': '2199.00',
     '999': '999.00',
     '899': '899.00',
     '799': '799.00',
@@ -1186,7 +1198,7 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
       amount: { value: amount, currency: 'RUB' },
       confirmation: {
         type: 'redirect',
-        return_url: 'https://ttlova.shop/?payment=success'
+        return_url: `https://ttlova.shop/?payment=success&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&product=${encodeURIComponent(product)}&size=${encodeURIComponent(size)}&delivery=${encodeURIComponent(delivery)}&address=${encodeURIComponent(address)}&amount=${amount}`
       },
       capture: true,
       description: `${product}, размер ${size}, ${name}`,
@@ -1230,6 +1242,30 @@ if (window.location.search.includes('payment=success')) {
     const success = document.getElementById('formSuccess');
     if(success) {
       success.style.display = 'block';
+
+      // Читаем параметры из URL
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name') || '';
+      const phone = params.get('phone') || '';
+      const product = params.get('product') || '';
+      const size = params.get('size') || '';
+      const delivery = params.get('delivery') || '';
+      const address = params.get('address') || '';
+      const amount = params.get('amount') || '';
+
+      // Формируем данные для бота
+      const orderData = `name:${name}|phone:${phone}|product:${product}|size:${size}|delivery:${delivery}|address:${address}|amount:${amount}`;
+      const botParam = encodeURIComponent(orderData).substring(0, 64).replace(/%/g,'x');
+
+      // Обновляем ссылку на бота
+      const botLink = success.querySelector('a[href*="t.me"]');
+      if(botLink) {
+        botLink.href = `https://t.me/TTLOVAdelivery_bot?start=${botParam}`;
+      }
+
+      // Сохраняем данные в localStorage для бота
+      const fullData = {name, phone, product, size, delivery, address, amount};
+      localStorage.setItem('ttlova_order_' + botParam, JSON.stringify(fullData));
     }
   });
 }
@@ -1290,8 +1326,8 @@ let selectedSize = null;
 // ── SIZES MAP ───────────────────────────────────────
 const productSizesMap = {
   'Костюм в горошек — 2 999 ₽': ['S (42-44)', 'L (46-48)'],
-  'Костюм цветочный (топ + юбка-макси) — 899 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
-  'Костюм рубашка белый — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм цветочный (топ + юбка-макси) — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
+  'Костюм рубашка белый — 2 199 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм белый в полоску — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
   'Льняной костюм бежевый с шортами — 799 ₽': ['S (44)', 'M (46)', 'L (48)', 'XL (50)'],
@@ -1441,8 +1477,17 @@ async function checkoutCart() {
   btn.textContent = 'Отправляем...';
   btn.disabled = true;
 
-  const total = cart.reduce((sum, i) => sum + i.price, 0);
+  // Проверка суммы для доставки
+  if (cartDelivery === 'Доставка по Красноярску' && total < 5000) {
+    alert(`Бесплатная доставка от 5 000 ₽. Ваша сумма: ${total.toLocaleString('ru-RU')} ₽. Добавьте товары или выберите самовывоз.`);
+    btn.textContent = 'Оформить заказ';
+    btn.disabled = false;
+    return;
+  }
+
+  const address = document.getElementById('cartAddress').value.trim();
   const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
+  const itemsShort = cart.map(i => i.product.replace(/ — \d.*/, '')).join(', ');
   const deliveryInfo = cartDelivery === 'Самовывоз'
     ? 'Самовывоз · г. Красноярск, ул. Семафорная д. 80, оф. 9'
     : `Доставка по Красноярску · ${address || 'адрес не указан'}`;
@@ -1466,9 +1511,10 @@ async function checkoutCart() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           amount: total + '.00',
-          description: `Заказ TTLOVA: ${cart.map(i => i.product.replace(/ — \d.*/, '')).join(', ')}`,
+          description: `Заказ TTLOVA: ${itemsShort}`,
           orderId: orderId,
-          phone: phone
+          phone: phone,
+          return_url: `https://ttlova.shop/?payment=success&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&product=${encodeURIComponent(itemsShort)}&size=корзина&delivery=${encodeURIComponent(deliveryInfo)}&address=${encodeURIComponent(address)}&amount=${total}`
         })
       });
       const payData = await payRes.json();
