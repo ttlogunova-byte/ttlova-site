@@ -739,7 +739,8 @@ async function checkoutCart() {
       throw new Error('Telegram error');
     }
   } catch(e) {
-    alert('Ошибка отправки. Пожалуйста, напишите нам в Telegram: @TTLOVASHOP');
+    console.error('Cart checkout error:', e);
+    alert('Ошибка: ' + e.message + '\n\nНапишите нам в Telegram: @TTLOVASHOP');
   } finally {
     btn.textContent = 'Оформить заказ';
     btn.disabled = cart.length === 0;
