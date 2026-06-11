@@ -272,6 +272,9 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
   /* PRODUCTS */
   .products { padding-top: 48px; }
   .products-grid { grid-template-columns: 1fr 1fr; gap: 2px; max-width: 100%; }
+  .product-btn, .add-to-cart-btn { min-height: 44px; font-size: 10px; padding: 10px 8px; -webkit-tap-highlight-color: transparent; }
+  .cart-drawer { width: 100vw; }
+  .cart-btn { min-height: 44px; }
 
   /* REVIEWS */
   .reviews-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -1006,7 +1009,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
           </div>
           <div class="form-group">
             <label>Адрес доставки</label>
-            <input type="text" name="address" placeholder="Улица, дом, квартира" required>
+            <input type="text" name="address" id="addressInput" placeholder="Улица, дом, квартира (для доставки по городу)">
           </div>
         </div>
 
@@ -1014,11 +1017,11 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
           <label>Способ доставки</label>
           <div class="radio-group">
             <label class="radio-card">
-              <input type="radio" name="delivery" value="Самовывоз" required>
+              <input type="radio" name="delivery" value="Самовывоз" required onchange="toggleAddress(this)">
               <span class="radio-label">Самовывоз · ул. Семафорная 80, оф. 9</span>
             </label>
             <label class="radio-card">
-              <input type="radio" name="delivery" value="Доставка по Красноярску">
+              <input type="radio" name="delivery" value="Доставка по Красноярску" onchange="toggleAddress(this)">
               <span class="radio-label">Доставка по Красноярску</span>
             </label>
           </div>
@@ -1072,6 +1075,19 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 </footer>
 
 <script>
+function toggleAddress(radio) {
+  const addressGroup = document.getElementById('addressInput').closest('.form-group');
+  if (radio.value === 'Самовывоз') {
+    addressGroup.style.display = 'none';
+    document.getElementById('addressInput').required = false;
+    document.getElementById('addressInput').value = 'г. Красноярск, ул. Семафорная д. 80, оф. 9';
+  } else {
+    addressGroup.style.display = 'block';
+    document.getElementById('addressInput').required = true;
+    document.getElementById('addressInput').value = '';
+  }
+}
+
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
 });
