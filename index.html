@@ -657,7 +657,6 @@ async function checkoutCart() {
     return;
   }
 
-  const address = document.getElementById('cartAddress').value.trim();
   const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
   const itemsShort = cart.map(i => i.product.replace(/ — \d.*/, '')).join(', ');
   const deliveryInfo = cartDelivery === 'Самовывоз'
