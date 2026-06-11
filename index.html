@@ -167,9 +167,9 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 .cart-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
 .cart-count{background:var(--gold);color:#fff;border-radius:50%;width:18px;height:18px;font-size:12px;display:none;align-items:center;justify-content:center;font-weight:500}
 .cart-count.visible{display:flex}
-.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .cart-overlay.open{opacity:1;pointer-events:all}
-.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--bg);z-index:201;transform:translateX(100%);transition:transform 0.4s ease;display:flex;flex-direction:column}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--bg);z-index:401;transform:translateX(100%);transition:transform 0.4s ease;display:flex;flex-direction:column}
 .cart-drawer.open{transform:translateX(0)}
 .cart-header{padding:28px 28px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .cart-header-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300}
@@ -513,6 +513,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
 let cart = [];
 let pendingProduct = null;
 let selectedSize = null;
+let cartDelivery = '';
 
 // ── SIZES MAP ───────────────────────────────────────
 const productSizesMap = productSizes;
@@ -536,11 +537,9 @@ function closeCart() {
 function addToCart(productValue) {
   const sizes = productSizes[productValue] || [];
   if (sizes.length === 1) {
-    // Only one size — add directly
     pushToCart(productValue, sizes[0]);
-    openCart();
+    showAddedNotification(productValue);
   } else {
-    // Show size picker
     pendingProduct = productValue;
     selectedSize = null;
     document.getElementById('sizePopupProduct').textContent = productValue.replace(/ — \d.*/, '');
@@ -561,6 +560,15 @@ function addToCart(productValue) {
   }
 }
 
+function showAddedNotification(productValue) {
+  const name = productValue.replace(/ — \d.*/, '');
+  const note = document.createElement('div');
+  note.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:14px 28px;font-family:Jost,sans-serif;font-size:13px;letter-spacing:0.08em;z-index:500;border-radius:2px;transition:opacity 0.3s';
+  note.textContent = `✓ ${name} добавлен в корзину`;
+  document.body.appendChild(note);
+  setTimeout(() => { note.style.opacity = '0'; setTimeout(() => note.remove(), 300); }, 2000);
+}
+
 function closeSizePopup() {
   document.getElementById('sizePopup').classList.remove('open');
   pendingProduct = null;
@@ -571,7 +579,7 @@ function confirmAddToCart() {
   if (!selectedSize) { alert('Пожалуйста, выберите размер'); return; }
   pushToCart(pendingProduct, selectedSize);
   closeSizePopup();
-  openCart();
+  showAddedNotification(pendingProduct);
 }
 
 function pushToCart(productValue, size) {
@@ -611,8 +619,6 @@ function updateCartUI() {
   document.getElementById('cartCheckoutBtn').disabled = count === 0;
 }
 
-let cartDelivery = '';
-
 function selectCartDelivery(val) {
   cartDelivery = val;
   const pickup = document.getElementById('cartDelPickupLabel');
@@ -640,6 +646,7 @@ async function checkoutCart() {
   const name = document.getElementById('cartName').value.trim();
   const phone = document.getElementById('cartPhone').value.trim();
   const address = document.getElementById('cartAddress').value.trim();
+  const total = cart.reduce((sum, i) => sum + i.price, 0);
 
   if (!name) { alert('Пожалуйста, введите имя'); document.getElementById('cartName').focus(); return; }
   if (!phone) { alert('Пожалуйста, введите телефон'); document.getElementById('cartPhone').focus(); return; }
@@ -1551,14 +1558,8 @@ if (window.location.search.includes('payment=success')) {
         <input id="cartPhone" type="tel" placeholder="+7 000 000 00 00" style="background:var(--bg2);border:1px solid var(--line2);padding:12px 14px;font-family:'Jost',sans-serif;font-size:15px;color:var(--text);outline:none;width:100%">
         <input id="cartAddress" type="text" placeholder="Адрес (или оставьте пустым для самовывоза)" style="background:var(--bg2);border:1px solid var(--line2);padding:12px 14px;font-family:'Jost',sans-serif;font-size:15px;color:var(--text);outline:none;width:100%">
         <div style="display:flex;gap:8px">
-          <label style="flex:1;cursor:pointer">
-            <input type="radio" name="cartDelivery" value="Самовывоз" style="display:none" id="cartDelPickup">
-            <div id="cartDelPickupLabel" onclick="selectCartDelivery('Самовывоз')" style="border:1px solid var(--line2);padding:10px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">Самовывоз</div>
-          </label>
-          <label style="flex:1;cursor:pointer">
-            <input type="radio" name="cartDelivery" value="Доставка по Красноярску" style="display:none" id="cartDelCity">
-            <div id="cartDelCityLabel" onclick="selectCartDelivery('Доставка по Красноярску')" style="border:1px solid var(--line2);padding:10px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">По Красноярску</div>
-          </label>
+          <div style="flex:1" id="cartDelPickupLabel" onclick="selectCartDelivery('Самовывоз')" style="border:1px solid var(--line2);padding:12px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">Самовывоз</div>
+          <div style="flex:1" id="cartDelCityLabel" onclick="selectCartDelivery('Доставка по Красноярску')" style="border:1px solid var(--line2);padding:12px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all 0.2s">По Красноярску</div>
         </div>
       </div>
       <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">Оформить заказ</button>
