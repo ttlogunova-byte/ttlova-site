@@ -507,6 +507,240 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:36px 48px;disp
   </div>
 </div>
 
+
+<script>
+// ── CART STATE ──────────────────────────────────────
+let cart = [];
+let pendingProduct = null;
+let selectedSize = null;
+
+// ── SIZES MAP ───────────────────────────────────────
+const productSizesMap = productSizes;
+
+function getPrice(productValue) {
+  const match = productValue.match(/(\d[\d\s]+)₽/);
+  return match ? parseInt(match[1].replace(/\s/g, '')) : 0;
+}
+
+// ── CART OPEN/CLOSE ─────────────────────────────────
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+// ── ADD TO CART ─────────────────────────────────────
+function addToCart(productValue) {
+  const sizes = productSizes[productValue] || [];
+  if (sizes.length === 1) {
+    // Only one size — add directly
+    pushToCart(productValue, sizes[0]);
+    openCart();
+  } else {
+    // Show size picker
+    pendingProduct = productValue;
+    selectedSize = null;
+    document.getElementById('sizePopupProduct').textContent = productValue.replace(/ — \d.*/, '');
+    const sizesEl = document.getElementById('sizePopupSizes');
+    sizesEl.innerHTML = '';
+    sizes.forEach(s => {
+      const pill = document.createElement('button');
+      pill.className = 'size-pill';
+      pill.textContent = s;
+      pill.onclick = () => {
+        document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
+        pill.classList.add('selected');
+        selectedSize = s;
+      };
+      sizesEl.appendChild(pill);
+    });
+    document.getElementById('sizePopup').classList.add('open');
+  }
+}
+
+function closeSizePopup() {
+  document.getElementById('sizePopup').classList.remove('open');
+  pendingProduct = null;
+  selectedSize = null;
+}
+
+function confirmAddToCart() {
+  if (!selectedSize) { alert('Пожалуйста, выберите размер'); return; }
+  pushToCart(pendingProduct, selectedSize);
+  closeSizePopup();
+  openCart();
+}
+
+function pushToCart(productValue, size) {
+  cart.push({ product: productValue, size, price: getPrice(productValue), id: Date.now() });
+  updateCartUI();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = cart.length;
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = count;
+  countEl.classList.toggle('visible', count > 0);
+
+  const itemsEl = document.getElementById('cartItems');
+  if (count === 0) {
+    itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста</div>';
+  } else {
+    itemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.product.replace(/ — \d.*/, '')}</div>
+          <div class="cart-item-size">Размер: ${item.size}</div>
+          <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById('cartTotal').textContent = total.toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('cartCheckoutBtn').disabled = count === 0;
+}
+
+let cartDelivery = '';
+
+function selectCartDelivery(val) {
+  cartDelivery = val;
+  const pickup = document.getElementById('cartDelPickupLabel');
+  const city = document.getElementById('cartDelCityLabel');
+  if (val === 'Самовывоз') {
+    pickup.style.background = 'var(--dark)';
+    pickup.style.color = '#fff';
+    pickup.style.borderColor = 'var(--dark)';
+    city.style.background = '';
+    city.style.color = '';
+    city.style.borderColor = 'var(--line2)';
+  } else {
+    city.style.background = 'var(--dark)';
+    city.style.color = '#fff';
+    city.style.borderColor = 'var(--dark)';
+    pickup.style.background = '';
+    pickup.style.color = '';
+    pickup.style.borderColor = 'var(--line2)';
+  }
+}
+
+async function checkoutCart() {
+  if (cart.length === 0) return;
+
+  const name = document.getElementById('cartName').value.trim();
+  const phone = document.getElementById('cartPhone').value.trim();
+  const address = document.getElementById('cartAddress').value.trim();
+
+  if (!name) { alert('Пожалуйста, введите имя'); document.getElementById('cartName').focus(); return; }
+  if (!phone) { alert('Пожалуйста, введите телефон'); document.getElementById('cartPhone').focus(); return; }
+  if (!cartDelivery) { alert('Пожалуйста, выберите способ доставки'); return; }
+
+  const btn = document.getElementById('cartCheckoutBtn');
+  btn.textContent = 'Отправляем...';
+  btn.disabled = true;
+
+  // Проверка суммы для доставки
+  if (cartDelivery === 'Доставка по Красноярску' && total < 5000) {
+    alert(`Бесплатная доставка от 5 000 ₽. Ваша сумма: ${total.toLocaleString('ru-RU')} ₽. Добавьте товары или выберите самовывоз.`);
+    btn.textContent = 'Оформить заказ';
+    btn.disabled = false;
+    return;
+  }
+
+  const address = document.getElementById('cartAddress').value.trim();
+  const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
+  const itemsShort = cart.map(i => i.product.replace(/ — \d.*/, '')).join(', ');
+  const deliveryInfo = cartDelivery === 'Самовывоз'
+    ? 'Самовывоз · г. Красноярск, ул. Семафорная д. 80, оф. 9'
+    : `Доставка по Красноярску · ${address || 'адрес не указан'}`;
+
+  const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
+  const CHAT_ID = '6716786160';
+  const text = `🛍 Новый заказ TTLOVA (корзина)!\n\n📦 Товары:\n${itemsList}\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🚚 Доставка: ${deliveryInfo}\n💰 Итого: ${total.toLocaleString('ru-RU')} ₽\n📌 Адрес самовывоза: г. Красноярск, ул. Семафорная д. 80, оф. 9`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: CHAT_ID, text})
+    });
+    const data = await res.json();
+    if (data.ok) {
+      // Сохраняем заказ в Supabase
+      const SUPABASE_URL = 'https://dtmitatnaduyglhwyckj.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0bWl0YXRuYWR1eWdsaHd5Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDEyMDcsImV4cCI6MjA5NjY3NzIwN30.FVYD5wKjUqbqgIIzWtS_SNUHbBaAFagEZoSjAd-KG0o';
+      let cartOrderNumber = '#' + Date.now().toString().slice(-4);
+      try {
+        const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({
+            order_number: cartOrderNumber,
+            name, phone,
+            product: itemsShort,
+            size: 'корзина',
+            delivery: deliveryInfo,
+            address,
+            amount: total.toString()
+          })
+        });
+        const saved = await saveRes.json();
+        if (saved[0]?.id) cartOrderNumber = '#' + String(saved[0].id).padStart(4, '0');
+      } catch(e) {}
+
+      // Создаём платёж в ЮКасса
+      const orderId = 'ttlova-cart-' + Date.now();
+      const payRes = await fetch('/.netlify/functions/create-payment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          amount: total + '.00',
+          description: `Заказ TTLOVA: ${itemsShort}`,
+          orderId: orderId,
+          phone: phone,
+          return_url: `https://ttlova.shop/?payment=success&order=${encodeURIComponent(cartOrderNumber)}`
+        })
+      });
+      const payData = await payRes.json();
+      if (payData.url) {
+        cart = [];
+        cartDelivery = '';
+        document.getElementById('cartName').value = '';
+        document.getElementById('cartPhone').value = '';
+        document.getElementById('cartAddress').value = '';
+        updateCartUI();
+        closeCart();
+        window.location.href = payData.url;
+      } else {
+        throw new Error('No payment URL');
+      }
+    } else {
+      throw new Error('Telegram error');
+    }
+  } catch(e) {
+    alert('Ошибка отправки. Пожалуйста, напишите нам в Telegram: @TTLOVASHOP');
+  } finally {
+    btn.textContent = 'Оформить заказ';
+    btn.disabled = cart.length === 0;
+  }
+}
+</script>
+
 <section class="products">
   <div class="section-header reveal">
     <div class="section-label">Коллекция</div>
@@ -1344,237 +1578,5 @@ if (window.location.search.includes('payment=success')) {
   </div>
 </div>
 
-<script>
-// ── CART STATE ──────────────────────────────────────
-let cart = [];
-let pendingProduct = null;
-let selectedSize = null;
-
-// ── SIZES MAP ───────────────────────────────────────
-const productSizesMap = productSizes;
-
-function getPrice(productValue) {
-  const match = productValue.match(/(\d[\d\s]+)₽/);
-  return match ? parseInt(match[1].replace(/\s/g, '')) : 0;
-}
-
-// ── CART OPEN/CLOSE ─────────────────────────────────
-function openCart() {
-  document.getElementById('cartDrawer').classList.add('open');
-  document.getElementById('cartOverlay').classList.add('open');
-}
-function closeCart() {
-  document.getElementById('cartDrawer').classList.remove('open');
-  document.getElementById('cartOverlay').classList.remove('open');
-}
-
-// ── ADD TO CART ─────────────────────────────────────
-function addToCart(productValue) {
-  const sizes = productSizes[productValue] || [];
-  if (sizes.length === 1) {
-    // Only one size — add directly
-    pushToCart(productValue, sizes[0]);
-    openCart();
-  } else {
-    // Show size picker
-    pendingProduct = productValue;
-    selectedSize = null;
-    document.getElementById('sizePopupProduct').textContent = productValue.replace(/ — \d.*/, '');
-    const sizesEl = document.getElementById('sizePopupSizes');
-    sizesEl.innerHTML = '';
-    sizes.forEach(s => {
-      const pill = document.createElement('button');
-      pill.className = 'size-pill';
-      pill.textContent = s;
-      pill.onclick = () => {
-        document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
-        pill.classList.add('selected');
-        selectedSize = s;
-      };
-      sizesEl.appendChild(pill);
-    });
-    document.getElementById('sizePopup').classList.add('open');
-  }
-}
-
-function closeSizePopup() {
-  document.getElementById('sizePopup').classList.remove('open');
-  pendingProduct = null;
-  selectedSize = null;
-}
-
-function confirmAddToCart() {
-  if (!selectedSize) { alert('Пожалуйста, выберите размер'); return; }
-  pushToCart(pendingProduct, selectedSize);
-  closeSizePopup();
-  openCart();
-}
-
-function pushToCart(productValue, size) {
-  cart.push({ product: productValue, size, price: getPrice(productValue), id: Date.now() });
-  updateCartUI();
-}
-
-function removeFromCart(id) {
-  cart = cart.filter(item => item.id !== id);
-  updateCartUI();
-}
-
-function updateCartUI() {
-  const count = cart.length;
-  const countEl = document.getElementById('cartCount');
-  countEl.textContent = count;
-  countEl.classList.toggle('visible', count > 0);
-
-  const itemsEl = document.getElementById('cartItems');
-  if (count === 0) {
-    itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста</div>';
-  } else {
-    itemsEl.innerHTML = cart.map(item => `
-      <div class="cart-item">
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.product.replace(/ — \d.*/, '')}</div>
-          <div class="cart-item-size">Размер: ${item.size}</div>
-          <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</div>
-        </div>
-        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
-      </div>
-    `).join('');
-  }
-
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
-  document.getElementById('cartTotal').textContent = total.toLocaleString('ru-RU') + ' ₽';
-  document.getElementById('cartCheckoutBtn').disabled = count === 0;
-}
-
-let cartDelivery = '';
-
-function selectCartDelivery(val) {
-  cartDelivery = val;
-  const pickup = document.getElementById('cartDelPickupLabel');
-  const city = document.getElementById('cartDelCityLabel');
-  if (val === 'Самовывоз') {
-    pickup.style.background = 'var(--dark)';
-    pickup.style.color = '#fff';
-    pickup.style.borderColor = 'var(--dark)';
-    city.style.background = '';
-    city.style.color = '';
-    city.style.borderColor = 'var(--line2)';
-  } else {
-    city.style.background = 'var(--dark)';
-    city.style.color = '#fff';
-    city.style.borderColor = 'var(--dark)';
-    pickup.style.background = '';
-    pickup.style.color = '';
-    pickup.style.borderColor = 'var(--line2)';
-  }
-}
-
-async function checkoutCart() {
-  if (cart.length === 0) return;
-
-  const name = document.getElementById('cartName').value.trim();
-  const phone = document.getElementById('cartPhone').value.trim();
-  const address = document.getElementById('cartAddress').value.trim();
-
-  if (!name) { alert('Пожалуйста, введите имя'); document.getElementById('cartName').focus(); return; }
-  if (!phone) { alert('Пожалуйста, введите телефон'); document.getElementById('cartPhone').focus(); return; }
-  if (!cartDelivery) { alert('Пожалуйста, выберите способ доставки'); return; }
-
-  const btn = document.getElementById('cartCheckoutBtn');
-  btn.textContent = 'Отправляем...';
-  btn.disabled = true;
-
-  // Проверка суммы для доставки
-  if (cartDelivery === 'Доставка по Красноярску' && total < 5000) {
-    alert(`Бесплатная доставка от 5 000 ₽. Ваша сумма: ${total.toLocaleString('ru-RU')} ₽. Добавьте товары или выберите самовывоз.`);
-    btn.textContent = 'Оформить заказ';
-    btn.disabled = false;
-    return;
-  }
-
-  const address = document.getElementById('cartAddress').value.trim();
-  const itemsList = cart.map(i => `• ${i.product.replace(/ — \d.*/, '')} · ${i.size}`).join('\n');
-  const itemsShort = cart.map(i => i.product.replace(/ — \d.*/, '')).join(', ');
-  const deliveryInfo = cartDelivery === 'Самовывоз'
-    ? 'Самовывоз · г. Красноярск, ул. Семафорная д. 80, оф. 9'
-    : `Доставка по Красноярску · ${address || 'адрес не указан'}`;
-
-  const TOKEN = '8984520183:AAFPTnnESDEQEILtamvQDb0HMhZJptGzaL4';
-  const CHAT_ID = '6716786160';
-  const text = `🛍 Новый заказ TTLOVA (корзина)!\n\n📦 Товары:\n${itemsList}\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🚚 Доставка: ${deliveryInfo}\n💰 Итого: ${total.toLocaleString('ru-RU')} ₽\n📌 Адрес самовывоза: г. Красноярск, ул. Семафорная д. 80, оф. 9`;
-
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({chat_id: CHAT_ID, text})
-    });
-    const data = await res.json();
-    if (data.ok) {
-      // Сохраняем заказ в Supabase
-      const SUPABASE_URL = 'https://dtmitatnaduyglhwyckj.supabase.co';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0bWl0YXRuYWR1eWdsaHd5Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDEyMDcsImV4cCI6MjA5NjY3NzIwN30.FVYD5wKjUqbqgIIzWtS_SNUHbBaAFagEZoSjAd-KG0o';
-      let cartOrderNumber = '#' + Date.now().toString().slice(-4);
-      try {
-        const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-          method: 'POST',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify({
-            order_number: cartOrderNumber,
-            name, phone,
-            product: itemsShort,
-            size: 'корзина',
-            delivery: deliveryInfo,
-            address,
-            amount: total.toString()
-          })
-        });
-        const saved = await saveRes.json();
-        if (saved[0]?.id) cartOrderNumber = '#' + String(saved[0].id).padStart(4, '0');
-      } catch(e) {}
-
-      // Создаём платёж в ЮКасса
-      const orderId = 'ttlova-cart-' + Date.now();
-      const payRes = await fetch('/.netlify/functions/create-payment', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          amount: total + '.00',
-          description: `Заказ TTLOVA: ${itemsShort}`,
-          orderId: orderId,
-          phone: phone,
-          return_url: `https://ttlova.shop/?payment=success&order=${encodeURIComponent(cartOrderNumber)}`
-        })
-      });
-      const payData = await payRes.json();
-      if (payData.url) {
-        cart = [];
-        cartDelivery = '';
-        document.getElementById('cartName').value = '';
-        document.getElementById('cartPhone').value = '';
-        document.getElementById('cartAddress').value = '';
-        updateCartUI();
-        closeCart();
-        window.location.href = payData.url;
-      } else {
-        throw new Error('No payment URL');
-      }
-    } else {
-      throw new Error('Telegram error');
-    }
-  } catch(e) {
-    alert('Ошибка отправки. Пожалуйста, напишите нам в Telegram: @TTLOVASHOP');
-  } finally {
-    btn.textContent = 'Оформить заказ';
-    btn.disabled = cart.length === 0;
-  }
-}
-</script>
 </body>
 </html>
