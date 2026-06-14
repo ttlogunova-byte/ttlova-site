@@ -1305,7 +1305,7 @@ async function checkoutCart() {
         <h3>Заказ оплачен!</h3>
         <p>Спасибо! Мы уже готовим ваш заказ.</p>
         <p style="margin-top:12px;font-size:13px;color:var(--muted);line-height:1.8">Напишите нам в Telegram — согласуем удобное время и дату доставки или самовывоза.</p>
-        <a href="https://t.me/TTLOVASHOP" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
+        <a href="https://t.me/TTLOVAdelivery_bot" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
         <p style="margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:0.05em">@TTLOVASHOP · работаем без выходных</p>
       </div>
     </div>
@@ -1570,7 +1570,7 @@ if (window.location.search.includes('payment=success')) {
 
     // Ссылка на Telegram-бота с номером заказа
     const tgBtn = document.getElementById('pcTelegramBtn');
-    if (tgBtn) tgBtn.href = botParam ? `https://t.me/TTLOVASHOP?start=${botParam}` : 'https://t.me/TTLOVASHOP';
+    if (tgBtn) tgBtn.href = botParam ? `https://t.me/TTLOVAdelivery_bot?start=${botParam}` : 'https://t.me/TTLOVAdelivery_bot';
 
     // ── МАКС: раскомментируй эти 2 строки, когда будет готов бот для MAX ──
     // const maxBtn = document.getElementById('pcMaxBtn');
@@ -1640,7 +1640,7 @@ if (window.location.search.includes('payment=success')) {
     <p class="pc-text">Остался последний шаг — подтвердите заказ в мессенджере.</p>
     <p class="pc-sub">Там вы увидите состав заказа и сразу выберете удобный день и время самовывоза или доставки.</p>
 
-    <a id="pcTelegramBtn" class="pc-btn" href="https://t.me/TTLOVASHOP" target="_blank" rel="noopener">
+    <a id="pcTelegramBtn" class="pc-btn" href="https://t.me/TTLOVAdelivery_bot" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
       Подтвердить заказ в Telegram
     </a>
