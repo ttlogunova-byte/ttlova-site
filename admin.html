@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>TTLOVA · Заказы</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#faf9f7;--bg2:#f3f1ee;--bg3:#ebe8e3;--dark:#0e0e0e;
+  --text:#1a1a1a;--muted:#888;--gold:#c4a25a;--line:rgba(0,0,0,0.1);--line2:rgba(0,0,0,0.18);
+}
+body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:24px 16px 80px}
+
+/* gate */
+#gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+.gate-card{max-width:340px;width:100%;text-align:center}
+.gate-card h1{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;font-style:italic;margin-bottom:8px}
+.gate-card p{font-size:13px;color:var(--muted);margin-bottom:24px;letter-spacing:0.05em}
+.gate-card input{width:100%;background:var(--bg);border:1px solid var(--line2);padding:14px 16px;font-family:'Jost',sans-serif;font-size:15px;outline:none;margin-bottom:12px;text-align:center}
+.gate-card input:focus{border-color:var(--dark)}
+.gate-card button{width:100%;background:var(--dark);color:#fff;border:none;padding:15px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer}
+.gate-err{color:#a32d2d;font-size:13px;min-height:18px;margin-top:6px}
+
+/* header */
+.head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:6px}
+.head h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,7vw,48px);font-weight:300;font-style:italic;line-height:1}
+.eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.refresh{background:none;border:1px solid var(--line2);padding:9px 16px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:var(--text);transition:all 0.2s}
+.refresh:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.subcount{font-size:13px;color:var(--muted);letter-spacing:0.05em;margin-bottom:20px}
+
+/* search */
+.search{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--line2);padding:0 14px;margin-bottom:14px}
+.search input{flex:1;border:none;background:transparent;padding:12px 0;font-family:'Jost',sans-serif;font-size:15px;outline:none;color:var(--text)}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{font-size:13px;letter-spacing:0.04em;padding:8px 14px;border:1px solid var(--line2);background:var(--bg);cursor:pointer;font-family:'Jost',sans-serif;color:var(--muted);transition:all 0.2s;border-radius:999px}
+.tab.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* cards */
+.list{display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border:1px solid var(--line);padding:18px 20px}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-num{font-size:17px;font-weight:500;letter-spacing:0.02em}
+.badge{font-size:12px;letter-spacing:0.05em;padding:4px 12px;border-radius:999px}
+.b-new{background:#faecd8;color:#8a5a0b}
+.b-paid{background:#e6f0fb;color:#0c447c}
+.b-booked{background:#e8f3e0;color:#3b6d11}
+.b-done{background:#ece9e3;color:#6b6862}
+.row{font-size:14.5px;line-height:1.65}
+.row .nm{font-weight:500}
+.row .ph{color:var(--muted)}
+.meta{color:var(--muted);display:flex;align-items:center;gap:6px}
+.meta.hi{color:var(--text)}
+.icon{width:15px;height:15px;flex-shrink:0;opacity:0.7}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.act{flex:1;min-width:120px;text-align:center;text-decoration:none;font-size:13px;letter-spacing:0.05em;padding:11px 8px;border:1px solid var(--line2);color:var(--text);cursor:pointer;background:#fff;font-family:'Jost',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.act:hover{background:var(--bg2)}
+.act.wa:hover{background:#e8f3e0;border-color:#3b6d11}
+.statusrow{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+.statusrow label{font-size:13px;color:var(--muted)}
+.statusrow select{flex:1;font-family:'Jost',sans-serif;font-size:14px;padding:9px 10px;border:1px solid var(--line2);background:var(--bg);outline:none;color:var(--text);cursor:pointer}
+.savehint{font-size:12px;min-width:60px;text-align:right}
+.empty,.loading{text-align:center;color:var(--muted);padding:60px 20px;font-size:15px}
+.errbox{background:#fcebeb;border:1px solid #f0a0a0;color:#791f1f;padding:16px;font-size:14px;line-height:1.6;margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <h1>TTLOVA</h1>
+    <p>Панель заказов</p>
+    <input id="pass" type="password" placeholder="Пароль" onkeydown="if(event.key==='Enter')checkPass()">
+    <button onclick="checkPass()">Войти</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Примерь любовь</div>
+      <h1>Заказы</h1>
+    </div>
+    <button class="refresh" onclick="load()">Обновить</button>
+  </div>
+  <div class="subcount" id="subcount">Загрузка…</div>
+
+  <div class="search">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="q" placeholder="Поиск: имя, номер, телефон" oninput="render()">
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="errSlot"></div>
+  <div class="list" id="list"><div class="loading">Загрузка заказов…</div></div>
+</div>
+
+<script>
+// ── Настройки ──
+const SUPABASE_URL = 'https://dtmitatnaduyglhwyckj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0bWl0YXRuYWR1eWdsaHd5Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDEyMDcsImV4cCI6MjA5NjY3NzIwN30.FVYD5wKjUqbqgIIzWtS_SNUHbBaAFagEZoSjAd-KG0o';
+const BOT = 'TTLOVAdelivery_bot';
+const ADMIN_PASS = 'ttlova1206';   // ← поменяй на свой пароль
+
+const ST = {
+  new:    {l:'Не оплачен', c:'b-new'},
+  paid:   {l:'Оплачен',    c:'b-paid'},
+  booked: {l:'Записан',    c:'b-booked'},
+  done:   {l:'Выдан',      c:'b-done'}
+};
+const TABS = [['all','Все'],['today','Сегодня'],['new','Не оплачены'],['paid','Оплачены'],['booked','Записаны'],['done','Выданы']];
+
+let ORDERS = [];
+let active = 'all';
+
+function checkPass(){
+  if(document.getElementById('pass').value === ADMIN_PASS){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    load();
+  } else {
+    document.getElementById('gateErr').textContent = 'Неверный пароль';
+  }
+}
+
+async function load(){
+  document.getElementById('list').innerHTML = '<div class="loading">Загрузка заказов…</div>';
+  document.getElementById('errSlot').innerHTML = '';
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&order=id.desc`, {
+      headers:{apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}`}
+    });
+    if(!res.ok){ throw new Error('Ошибка загрузки (' + res.status + ')'); }
+    ORDERS = await res.json();
+    render();
+  }catch(e){
+    document.getElementById('list').innerHTML = '';
+    document.getElementById('errSlot').innerHTML =
+      '<div class="errbox">Не удалось загрузить заказы: ' + e.message + '. Проверьте интернет и попробуйте «Обновить».</div>';
+  }
+}
+
+function statusOf(o){ return o.status || 'new'; }
+function isToday(o){ const d = (o.booking_day||''); return d.includes('Сегодня'); }
+function digits(p){ return (p||'').replace(/[^0-9]/g,''); }
+
+function buildMsg(o){
+  const param = String(o.order_number||'').replace('#','');
+  return `Здравствуйте! Спасибо за заказ ${o.order_number||''} в TTLOVA 💛\nПодтвердите заказ и выберите удобное время получения: https://t.me/${BOT}?start=${param}`;
+}
+async function copyMsg(id, btn){
+  const o = ORDERS.find(x=>x.id===id); if(!o) return;
+  const text = buildMsg(o);
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){
+    const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(_){} ta.remove();
+  }
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Скопировано';
+  setTimeout(()=>{ btn.innerHTML = orig; }, 1800);
+}
+
+function counts(f){
+  if(f==='all') return ORDERS.length;
+  if(f==='today') return ORDERS.filter(isToday).length;
+  return ORDERS.filter(o=>statusOf(o)===f).length;
+}
+
+function drawTabs(){
+  document.getElementById('tabs').innerHTML = TABS.map(([f,t])=>
+    `<button class="tab ${f===active?'on':''}" onclick="setTab('${f}')">${t} ${counts(f)}</button>`
+  ).join('');
+}
+function setTab(f){ active=f; render(); }
+
+function cardHTML(o){
+  const st = statusOf(o);
+  const b = ST[st] || ST.new;
+  const slot = (o.booking_day || o.booking_time)
+      ? `${o.booking_day||''}${o.booking_time? ' · '+o.booking_time : ''}`
+      : 'время не выбрано';
+  const slotCls = st==='booked' ? 'meta hi' : 'meta';
+  const addr = o.address ? ` · ${o.address}` : '';
+  return `<div class="card">
+    <div class="card-top">
+      <span class="card-num">${o.order_number||'#—'}</span>
+      <span class="badge ${b.c}">${b.l}</span>
+    </div>
+    <div class="row">
+      <div><span class="nm">${o.name||'—'}</span> <span class="ph">${o.phone||''}</span></div>
+      <div class="meta">${o.product||'—'}${o.size&&o.size!=='корзина'? ' · '+o.size : ''} · ${o.amount||'—'} ₽</div>
+      <div class="meta"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="11" rx="1"/><path d="M16 9h4l3 3v5h-7"/><circle cx="6" cy="18" r="2"/><circle cx="19" cy="18" r="2"/></svg>${o.delivery||'—'}${addr}</div>
+      <div class="${slotCls}"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>${slot}</div>
+    </div>
+    <div class="acts">
+      <a class="act" href="tel:${digits(o.phone)}"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 1.9.6 2.8a2 2 0 01-.5 2.1L8 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.5 2.8.6a2 2 0 011.7 2z"/></svg>Позвонить</a>
+      <button class="act" onclick="copyMsg(${o.id}, this)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>Копировать сообщение</button>
+    </div>
+    <div class="statusrow">
+      <label>Статус:</label>
+      <select onchange="setStatus(${o.id}, this.value, this)">
+        <option value="new"${st==='new'?' selected':''}>Не оплачен</option>
+        <option value="paid"${st==='paid'?' selected':''}>Оплачен</option>
+        <option value="booked"${st==='booked'?' selected':''}>Записан</option>
+        <option value="done"${st==='done'?' selected':''}>Выдан</option>
+      </select>
+      <span class="savehint" id="hint${o.id}"></span>
+    </div>
+  </div>`;
+}
+
+function render(){
+  drawTabs();
+  document.getElementById('subcount').textContent =
+    `сегодня ${counts('today')} · всего ${ORDERS.length}`;
+  const q = (document.getElementById('q').value||'').toLowerCase();
+  let rows = ORDERS.filter(o=>{
+    const okTab = active==='all' || (active==='today' ? isToday(o) : statusOf(o)===active);
+    const okQ = !q || ((o.name||'')+(o.phone||'')+(o.order_number||'')).toLowerCase().includes(q);
+    return okTab && okQ;
+  });
+  const list = document.getElementById('list');
+  if(rows.length===0){
+    list.innerHTML = '<div class="empty">Здесь пусто. Попробуйте другой фильтр или нажмите «Обновить».</div>';
+    return;
+  }
+  list.innerHTML = rows.map(cardHTML).join('');
+}
+
+async function setStatus(id, value, sel){
+  const hint = document.getElementById('hint'+id);
+  hint.textContent = '…'; hint.style.color = 'var(--muted)';
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${id}`, {
+      method:'PATCH',
+      headers:{apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}`, 'Content-Type':'application/json'},
+      body: JSON.stringify({status: value})
+    });
+    if(!res.ok){ const t = await res.text(); throw new Error(t); }
+    const o = ORDERS.find(x=>x.id===id); if(o) o.status = value;
+    hint.textContent = '✓'; hint.style.color = '#3b6d11';
+    drawTabs();
+    document.getElementById('subcount').textContent = `сегодня ${counts('today')} · всего ${ORDERS.length}`;
+    setTimeout(()=>{ hint.textContent=''; }, 1500);
+  }catch(e){
+    hint.textContent = '✕'; hint.style.color = '#a32d2d';
+    document.getElementById('errSlot').innerHTML =
+      '<div class="errbox">Статус не сохранился. Скорее всего в таблице ещё нет колонки <b>status</b> или не выдано право на изменение. Запустите SQL из инструкции — и попробуйте снова.</div>';
+  }
+}
+
+document.getElementById('pass').focus();
+</script>
+</body>
+</html>
