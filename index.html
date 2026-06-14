@@ -705,9 +705,25 @@ async function checkoutCart() {
             amount: total.toString()
           })
         });
+        if (!saveRes.ok) {
+          const errText = await saveRes.text();
+          throw new Error('Supabase ' + saveRes.status + ': ' + errText);
+        }
         const saved = await saveRes.json();
         if (saved[0]?.id) cartOrderNumber = '#' + String(saved[0].id).padStart(4, '0');
-      } catch(e) {}
+      } catch(e) {
+        // Заказ не записался в базу — предупреждаем администратора в Telegram
+        try {
+          await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: `⚠️ ВНИМАНИЕ: заказ НЕ сохранился в базу!\n\n👤 ${name}\n📞 ${phone}\n📦 ${itemsShort}\n💰 ${total.toLocaleString('ru-RU')} ₽\n\nПричина: ${e.message}\n\n❗ Запишите заказ вручную и проверьте Supabase.`
+            })
+          });
+        } catch(_) {}
+      }
 
       // Создаём платёж в ЮКасса
       const orderId = 'ttlova-cart-' + Date.now();
@@ -1289,7 +1305,7 @@ async function checkoutCart() {
         <h3>Заказ оплачен!</h3>
         <p>Спасибо! Мы уже готовим ваш заказ.</p>
         <p style="margin-top:12px;font-size:13px;color:var(--muted);line-height:1.8">Напишите нам в Telegram — согласуем удобное время и дату доставки или самовывоза.</p>
-        <a href="https://t.me/TTLOVAdelivery_bot" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
+        <a href="https://t.me/TTLOVASHOP" target="_blank" style="display:inline-block;margin-top:24px;background:var(--dark);color:#fff;padding:16px 36px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:background 0.3s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--dark)'">Написать в Telegram</a>
         <p style="margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:0.05em">@TTLOVASHOP · работаем без выходных</p>
       </div>
     </div>
@@ -1470,9 +1486,25 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
       },
       body: JSON.stringify({ order_number: orderNumber, name, phone, product, size, delivery, address, amount })
     });
+    if (!saveRes.ok) {
+      const errText = await saveRes.text();
+      throw new Error('Supabase ' + saveRes.status + ': ' + errText);
+    }
     const saved = await saveRes.json();
     if (saved[0]?.id) orderNumber = '#' + String(saved[0].id).padStart(4, '0');
-  } catch(e) {}
+  } catch(e) {
+    // Заказ не записался в базу — предупреждаем администратора в Telegram
+    try {
+      await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: `⚠️ ВНИМАНИЕ: заказ НЕ сохранился в базу!\n\n👤 ${name}\n📞 ${phone}\n📦 ${product} (${size})\n💰 ${amount} ₽\n\nПричина: ${e.message}\n\n❗ Запишите заказ вручную и проверьте Supabase.`
+        })
+      });
+    } catch(_) {}
+  }
 
   // Создаём платёж в ЮКасса
   try {
@@ -1516,25 +1548,36 @@ ${comment ? '💬 Комментарий: ' + comment : ''}
   }
 }
 
-// Показываем сообщение если вернулись после оплаты
+// Показываем крупный экран подтверждения, если клиент вернулся после оплаты
 if (window.location.search.includes('payment=success')) {
-  document.addEventListener('DOMContentLoaded', async () => {
-    document.getElementById('order').scrollIntoView({behavior:'smooth'});
-    const form = document.querySelector('.order-form');
-    if(form) form.style.display = 'none';
-    const success = document.getElementById('formSuccess');
-    if(!success) return;
-    success.style.display = 'block';
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('payConfirmOverlay');
+    if (!overlay) return;
 
     const params = new URLSearchParams(window.location.search);
-    const orderNumber = params.get('order') || '';
+    const orderNumber = (params.get('order') || '').trim();
+    // Для ссылки на бота убираем «#» — в start-параметр можно только буквы/цифры
+    const botParam = orderNumber.replace('#', '').trim();
 
-    // Обновляем ссылку на бота с номером заказа
-    const botLink = success.querySelector('a[href*="t.me"]');
-    if(botLink && orderNumber) {
-      const botParam = orderNumber.replace('#','');
-      botLink.href = `https://t.me/TTLOVAdelivery_bot?start=${botParam}`;
+    // Показываем номер заказа
+    if (orderNumber) {
+      const numEl = document.getElementById('pcOrderNumber');
+      if (numEl) {
+        numEl.textContent = 'Заказ ' + (orderNumber.startsWith('#') ? orderNumber : '#' + orderNumber);
+        numEl.style.display = 'inline-block';
+      }
     }
+
+    // Ссылка на Telegram-бота с номером заказа
+    const tgBtn = document.getElementById('pcTelegramBtn');
+    if (tgBtn) tgBtn.href = botParam ? `https://t.me/TTLOVASHOP?start=${botParam}` : 'https://t.me/TTLOVASHOP';
+
+    // ── МАКС: раскомментируй эти 2 строки, когда будет готов бот для MAX ──
+    // const maxBtn = document.getElementById('pcMaxBtn');
+    // if (maxBtn) maxBtn.href = botParam ? `https://max.ru/@BOT_USERNAME?start=${botParam}` : 'https://max.ru/@BOT_USERNAME';
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
   });
 }
 </script>
@@ -1565,6 +1608,63 @@ if (window.location.search.includes('payment=success')) {
       </div>
       <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="checkoutCart()">Оформить заказ</button>
     </div>
+  </div>
+</div>
+
+<!-- ЭКРАН ПОСЛЕ ОПЛАТЫ: подтверждение заказа в мессенджере -->
+<style>
+  #payConfirmOverlay{position:fixed;inset:0;z-index:1000;background:var(--bg);display:none;align-items:center;justify-content:center;padding:32px 24px;overflow-y:auto}
+  #payConfirmOverlay.open{display:flex}
+  .pc-card{max-width:440px;width:100%;text-align:center;margin:auto}
+  .pc-check{width:84px;height:84px;border-radius:50%;background:var(--dark);color:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;margin:0 auto 26px}
+  .pc-eyebrow{font-size:12px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .pc-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,9vw,58px);font-weight:300;font-style:italic;line-height:1.02;margin-bottom:18px;color:var(--text)}
+  .pc-order{display:inline-block;font-size:13px;letter-spacing:0.1em;color:var(--muted);border:1px solid var(--line2);padding:8px 18px;margin-bottom:24px}
+  .pc-text{font-size:17px;color:var(--text);line-height:1.6;margin-bottom:6px}
+  .pc-sub{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:30px}
+  .pc-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:var(--dark);color:#fff;padding:21px 24px;font-family:'Jost',sans-serif;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;text-decoration:none;transition:background 0.3s;border:none;cursor:pointer}
+  .pc-btn:hover{background:#333}
+  .pc-btn svg{width:22px;height:22px;flex-shrink:0}
+  .pc-steps{margin-top:34px;text-align:left;display:flex;flex-direction:column;gap:14px}
+  .pc-step{display:flex;gap:14px;align-items:center;font-size:14px;color:var(--muted);line-height:1.4}
+  .pc-step b{display:flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:50%;background:var(--bg3);color:var(--text);font-size:13px;font-weight:500;flex-shrink:0}
+  .pc-help{margin-top:30px;font-size:12px;color:var(--muted);letter-spacing:0.04em}
+  .pc-help a{color:var(--text)}
+</style>
+<div id="payConfirmOverlay">
+  <div class="pc-card">
+    <div class="pc-check">✓</div>
+    <p class="pc-eyebrow">Оплата получена</p>
+    <h2 class="pc-title">Заказ оплачен!</h2>
+    <div class="pc-order" id="pcOrderNumber" style="display:none"></div>
+    <p class="pc-text">Остался последний шаг — подтвердите заказ в мессенджере.</p>
+    <p class="pc-sub">Там вы увидите состав заказа и сразу выберете удобный день и время самовывоза или доставки.</p>
+
+    <a id="pcTelegramBtn" class="pc-btn" href="https://t.me/TTLOVASHOP" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      Подтвердить заказ в Telegram
+    </a>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         КНОПКА «МАКС» — добавим, когда будет готов бот для MAX.
+         Сейчас закомментирована, чтобы клиенты не попадали в никуда.
+         Когда бот в MAX будет создан:
+           1) замени BOT_USERNAME на @username бота в MAX (в href ниже)
+           2) убери строки с символами комментария вокруг кнопки
+           3) в скрипте выше раскомментируй 2 строки про pcMaxBtn
+    ─────────────────────────────────────────────────────────────────
+    <a id="pcMaxBtn" class="pc-btn" href="https://max.ru/@BOT_USERNAME" target="_blank" rel="noopener" style="background:var(--gold);margin-top:14px">
+      Подтвердить заказ в МАКС
+    </a>
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <div class="pc-steps">
+      <div class="pc-step"><b>1</b><span>Нажмите кнопку выше — откроется чат с TTLOVA</span></div>
+      <div class="pc-step"><b>2</b><span>Нажмите «Поделиться номером телефона»</span></div>
+      <div class="pc-step"><b>3</b><span>Выберите день и время получения — готово 💛</span></div>
+    </div>
+
+    <p class="pc-help">Не получается? Напишите нам: <a href="https://t.me/TTLOVASHOP" target="_blank">@TTLOVASHOP</a></p>
   </div>
 </div>
 
